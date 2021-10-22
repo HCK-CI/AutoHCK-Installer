@@ -1,0 +1,34 @@
+#!/bin/bash
+
+DEPENDENCIES=(
+    QEMU
+    DHCP
+    TOOLSHCK
+    HLK_SETUP_SCRIPTS
+    EXTRA_SOFTWARE
+    AUTOHCK
+)
+
+QEMU_GIT=https://github.com/qemu/qemu.git
+QEMU_REF=v6.1.0
+# QEMU_DIR=
+
+DHCP_GIT=https://github.com/HCK-CI/DHCPServerSetup.git
+DHCP_REF=52cac804d8dabb43014173888328bf466741783a
+# DHCP_DIR=
+
+TOOLSHCK_GIT=https://github.com/HCK-CI/toolsHCK.git
+TOOLSHCK_REF=88fba7cd89fe9fe4aeded143f3b98df11238bc71
+#TOOLSHCK_DIR=
+
+HLK_SETUP_SCRIPTS_GIT=https://github.com/HCK-CI/HLK-Setup-Scripts.git
+HLK_SETUP_SCRIPTS_REF=b2c95016eb45099975f2ab93f97ecfd8497353a4
+# HLK_SETUP_SCRIPTS_DIR=
+
+EXTRA_SOFTWARE_GIT=https://github.com/HCK-CI/extra-software.git
+EXTRA_SOFTWARE_REF=69a88f17da75deb1c840aae3e7f82f8d503c6652
+# EXTRA_SOFTWARE_DIR=
+
+AUTOHCK_GIT=https://github.com/HCK-CI/AutoHCK.git
+AUTOHCK_REF=ad7e220e0c320d47fe863a8094a8166fcd55dab7
+# AUTOHCK_DIR=
