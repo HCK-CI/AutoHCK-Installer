@@ -1,0 +1,109 @@
+#!/bin/bash
+
+set -e
+
+work_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+bootstrap="${work_dir}/bootstrap"
+
+source "${work_dir}/dependencies.sh"
+source "${work_dir}/logger.sh"
+source "${work_dir}/helpers.sh"
+source "${work_dir}/qemu.sh"
+source "${work_dir}/dhcp.sh"
+source "${work_dir}/autohck.sh"
+
+command_exists jq || log_fatal "jq command does not exist"
+command_exists docker || log_fatal "docker command does not exist"
+
+NET_BRIDGE=br_autohck
+NET_BRIDGE_SUBNET=192.168.0.
+
+[ ! -f "${bootstrap}" ] || source "${bootstrap}"
+
+repos_dir="$(from_env_or_read "REPOS_DIR" "Please provide path to repos directory")"
+iso_path="$(from_env_or_read "ISO_PATH" "Please provide path to ISO directory")"
+images_path="$(from_env_or_read "IMAGES_PATH" "Please provide path to images directory")"
+workspace_path="$(from_env_or_read "WORKSPACE_PATH" "Please provide path to workspace directory")"
+net_bridge="$(from_env_or_read "NET_BRIDGE" "Please provide AutoHCK bridge name")"
+net_bridge_subnet="$(from_env_or_read "NET_BRIDGE_SUBNET" "Please provide AutoHCK bridge subnet")"
+
+echo "REPOS_DIR='${repos_dir}'" > "${bootstrap}"
+echo >>"${bootstrap}"
+echo "ISO_PATH='${iso_path}'" >>"${bootstrap}"
+echo "IMAGES_PATH='${images_path}'" >>"${bootstrap}"
+echo "WORKSPACE_PATH='${workspace_path}'" >>"${bootstrap}"
+echo >>"${bootstrap}"
+echo "NET_BRIDGE='${net_bridge}'" >>"${bootstrap}"
+echo "NET_BRIDGE_SUBNET='${net_bridge_subnet}'" >>"${bootstrap}"
+echo >>"${bootstrap}"
+
+log_info "Processing repositories"
+
+for dependency in "${DEPENDENCIES[@]}"; do
+    log_info "Processing ${dependency}"
+
+    dependency_dir_var="${dependency}_DIR"
+    dependency_git_var="${dependency}_GIT"
+    dependency_ref_var="${dependency}_REF"
+
+    repo_url="${!dependency_git_var}"
+    repo_name="$(basename ${repo_url})"
+    repo_ref="${!dependency_ref_var}"
+
+    if [ -z "${!dependency_dir_var}" ]; then
+        repo_path="${repos_dir}/${repo_name}"
+    else
+        log_info "${dependency} dir overridden: ${!dependency_dir_var}"
+        repo_path="${!dependency_dir_var}"
+    fi
+    echo "${dependency}_DIR='${repo_path}'" >>"${bootstrap}"
+
+    source "${bootstrap}"
+
+    if [ -d "${repo_path}" ]; then
+        (
+            cd "${repo_path}"
+
+            git fetch
+            mapfile -d ' ' -t current_refs < <(git log -n1 --format='%h %H %D')
+
+            already_ref=0
+            for ref in "${current_refs[@]}"; do
+                if [ "$(echo ${ref} | tr -d '\n')" == "${repo_ref}" ]; then
+                    already_ref=1
+                fi
+            done
+
+            if [ "${already_ref}" == "0" ]; then
+                git fetch
+                git checkout "${repo_ref}"
+                if [ "$(LC_ALL=C type -t "post_clone_${dependency}")" == "function" ]; then
+                    log_info "Execution post_clone_${dependency} ${repo_path}"
+                    "post_clone_${dependency}" "${repo_path}"
+                fi
+            else
+                log_info "${repo_name} already at ${repo_ref}"
+            fi
+        )
+    else
+        git clone "${repo_url}" "${repo_path}"
+        (
+            cd "${repo_path}"
+            git checkout "${repo_ref}"
+
+            if [ "$(LC_ALL=C type -t "post_clone_${dependency}")" == "function" ]; then
+                log_info "Execution post_clone_${dependency} ${repo_path}"
+                "post_clone_${dependency}" "${repo_path}"
+            fi
+        )
+    fi
+
+    if [ "$(LC_ALL=C type -t "process_${dependency}")" == "function" ]; then
+        log_info "Execution "process_${dependency}" ${repo_path}"
+        "process_${dependency}" "${repo_path}"
+    fi
+done
+
+log_info "Generating config overwrite file"
+
+source "${work_dir}/config.sh" | tee "${AUTOHCK_DIR}/override.json"
