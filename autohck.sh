@@ -43,9 +43,9 @@ install_ruby() {
 
 run_bundle() {
   if [ "$(id -u)" == "0" ]; then
-    bundle "$*"
+    bundle "$@"
   else
-    rvmsudo bundle "$*" || sudo bundle "$*"
+    rvmsudo bundle "$@" || sudo bundle "$@"
   fi
 }
 
@@ -88,6 +88,6 @@ post_clone_AUTOHCK() {
 
   (
     cd "${auto_hck_dir}"
-    run_bundle install
+    run_bundle install --retry=32
   )
 }
