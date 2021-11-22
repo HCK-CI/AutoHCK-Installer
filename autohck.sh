@@ -49,6 +49,28 @@ run_bundle() {
   fi
 }
 
+install_deps_autohck() {
+  log_info "Installing AutoHCK dependencies"
+
+  lsb_dist="$( get_distribution )"
+
+  case "$lsb_dist" in
+    ubuntu)
+      sudo apt update
+      sudo apt -y install net-tools ethtool bridge-utils mkisofs jq
+      ;;
+
+    fedora)
+      sudo dnf makecache
+      sudo dnf -y install net-tools ethtool bridge-utils genisoimage jq
+      ;;
+
+    *)
+      log_fatal "Distributive '$lsb_dist' is unsupported. Please compile QEMU manually."
+      ;;
+  esac
+}
+
 post_clone_AUTOHCK() {
   log_info "AUTOHCK repository post clone"
 
@@ -57,6 +79,12 @@ post_clone_AUTOHCK() {
   if ! command_exists ruby; then
     install_ruby
   fi
+
+  commands_to_check=( ifconfig ethtool brctl mkisofs jq )
+  for cmd_to_check in "${commands_to_check[@]}"; do
+    command_exists "${cmd_to_check}" || install_deps_autohck
+    command_exists "${cmd_to_check}" || log_fatal "${cmd_to_check} command does not exist"
+  done
 
   (
     cd "${auto_hck_dir}"
