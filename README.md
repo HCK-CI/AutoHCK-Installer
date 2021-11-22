@@ -13,8 +13,7 @@ Installation process has been tested at the following OSes:
 
 Install latest version of the following tools:
 
-1. jq - for AutoHCK config generation
-2. docker - to run DHCP server tests
+1. docker - to run DHCP server tests
 
 ## Docker pre-configuration (optional)
 
