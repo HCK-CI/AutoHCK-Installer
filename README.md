@@ -32,6 +32,8 @@ To move some repository to custom path, export the following variables:
   - TOOLSHCK_DIR
   - HLK_SETUP_SCRIPTS_DIR
   - EXTRA_SOFTWARE_DIR
+  - HLK_PLAYLISTS_DIR
+  - HCK_FILTERS_DIR
   - AUTOHCK_DIR
 
 ```
