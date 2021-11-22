@@ -11,6 +11,8 @@ jq -n \
     --arg tools_hck "${TOOLSHCK_DIR}/toolsHCK.ps1" \
     --arg hlk_setup_scripts "${HLK_SETUP_SCRIPTS_DIR}" \
     --arg extra_software "${EXTRA_SOFTWARE_DIR}" \
+    --arg playlists_path "${HLK_PLAYLISTS_DIR}" \
+    --arg filters_path "${HCK_FILTERS_DIR}/UpdateFilters.sql" \
     --arg qemu_bin "${QEMU_BIN}" \
     --arg qemu_img_bin "${QEMU_IMG_BIN}" \
     --arg ivshmem_server_bin "${IVSHMEM_SERVER_BIN}" \
@@ -32,6 +34,10 @@ jq -n \
         },
         "lib/engines/hckinstall/hckinstall.json": {
           "hck_setup_scripts_path": $hlk_setup_scripts,
+        },
+        "lib/engines/hcktest/hcktest.json": {
+          "playlists_path": $playlists_path,
+          "filters_path": $filters_path
         },
         "lib/setupmanagers/qemuhck/qemu_machine.json": {
             "qemu_bin": $qemu_bin,
