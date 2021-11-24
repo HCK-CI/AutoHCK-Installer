@@ -2,6 +2,8 @@
 
 set -e
 
+export INSTALL_SILENT=false
+
 work_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 bootstrap="${work_dir}/bootstrap"
 
@@ -11,6 +13,19 @@ source "${work_dir}/helpers.sh"
 source "${work_dir}/qemu.sh"
 source "${work_dir}/dhcp.sh"
 source "${work_dir}/autohck.sh"
+
+for i in "$@"; do
+  case $i in
+    --silent)
+      export INSTALL_SILENT=true
+      ;;
+    *)
+      log_error "Unknown option: ${i}"
+      print_usage
+      exit 1
+      ;;
+  esac
+done
 
 command_exists jq || log_fatal "jq command does not exist"
 command_exists docker || log_fatal "docker command does not exist"
@@ -36,6 +51,8 @@ echo >>"${bootstrap}"
 echo "NET_BRIDGE='${net_bridge}'" >>"${bootstrap}"
 echo "NET_BRIDGE_SUBNET='${net_bridge_subnet}'" >>"${bootstrap}"
 echo >>"${bootstrap}"
+
+mkdir -vp "${repos_dir}" "${iso_path}" "${images_path}" "${workspace_path}"
 
 log_info "Processing repositories"
 
