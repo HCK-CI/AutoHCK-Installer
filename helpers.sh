@@ -24,11 +24,15 @@ from_env_or_read() {
         read -r -p "${read_msg}: " value
         echo "${value}"
     else
-        read -r -p "${read_msg} [${!env_name}]: " value
-        if [ -z "${value}" ]; then
+        if [ "${INSTALL_SILENT}" == "true" ]; then
             echo "${!env_name}"
         else
-            echo "${value}"
+            read -r -p "${read_msg} [${!env_name}]: " value
+            if [ -z "${value}" ]; then
+                echo "${!env_name}"
+            else
+                echo "${value}"
+            fi
         fi
     fi
 }
