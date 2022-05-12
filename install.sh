@@ -123,4 +123,15 @@ done
 
 log_info "Generating config overwrite file"
 
-source "${work_dir}/config.sh" | tee "${AUTOHCK_DIR}/override.json"
+source "${work_dir}/config.sh" | tee "${AUTOHCK_DIR}/override.install.json"
+
+if [ -f "${AUTOHCK_DIR}/override.json" ]; then
+    log_info "Old overwrite file present, merging..."
+
+    mv -vf "${AUTOHCK_DIR}/override.json" "${AUTOHCK_DIR}/override.old"
+
+    jq -s '.[0] * .[1]' "${AUTOHCK_DIR}/override.old" \
+        "${AUTOHCK_DIR}/override.install.json" | tee "${AUTOHCK_DIR}/override.json"
+else
+    mv -vf "${AUTOHCK_DIR}/override.install.json" "${AUTOHCK_DIR}/override.json"
+fi
