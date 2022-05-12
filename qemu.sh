@@ -50,7 +50,7 @@ compile_qemu() {
     rm -rf build
 
     git submodule update --init
-    ./configure --disable-docs --target-list=x86_64-softmmu --enable-virtfs
+    ./configure --disable-docs --target-list=x86_64-softmmu --enable-virtfs --disable-werror
     make -j "$(nproc)"
   )
 }
