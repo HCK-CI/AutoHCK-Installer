@@ -1,0 +1,23 @@
+name: test
+
+on: [push, pull_request]
+
+jobs:
+  run:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: run
+      run: |
+        bash -c "
+          export AUTOHCK_DIR="${HOME}/auto_hck"
+          export REPOS_DIR="${HOME}/repos"
+          export ISO_PATH="${HOME}/ISO"
+          export IMAGES_PATH="${HOME}/images"
+          export WORKSPACE_PATH="${HOME}/workspace"
+          bash install.sh --silent
+        "
