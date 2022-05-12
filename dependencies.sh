@@ -16,7 +16,7 @@ QEMU_REF=v6.1.0
 # QEMU_DIR=
 
 DHCP_GIT=https://github.com/HCK-CI/DHCPServerSetup.git
-DHCP_REF=52cac804d8dabb43014173888328bf466741783a
+DHCP_REF=13177bb8574f2f4162fdb6b5ff271339bd5951e5
 # DHCP_DIR=
 
 TOOLSHCK_GIT=https://github.com/HCK-CI/toolsHCK.git

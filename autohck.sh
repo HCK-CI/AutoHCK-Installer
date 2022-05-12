@@ -76,7 +76,7 @@ post_clone_AUTOHCK() {
 
   auto_hck_dir="$(realpath "${1}")"
 
-  if ! command_exists ruby; then
+  if [ ! command_exists ruby ] || [ ! command_exists bundle ]; then
     install_ruby
   fi
 
