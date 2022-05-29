@@ -36,3 +36,8 @@ from_env_or_read() {
         fi
     fi
 }
+
+has_openssl_3() {
+    local openssl_version="$(openssl version 2>/dev/null || true)"
+    [[ $openssl_version = "OpenSSL 3"?* ]]
+}
