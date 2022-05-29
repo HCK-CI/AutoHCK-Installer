@@ -9,8 +9,17 @@ post_clone_DHCP() {
 
   dhcp_dir="$(realpath "${1}")"
 
-  dns_list="$(join_by_comma $(cat /etc/resolv.conf | grep nameserver | grep -e '\.' | cut -d' ' -f2))"
+  resolv_confs=("/etc/resolv.conf" "/usr/lib/systemd/resolv.conf" "/run/systemd/resolve/resolv.conf")
+  for resolv_conf in ${resolv_confs[@]}; do
+    log_info "Processing DNS servers from ${resolv_conf}"
+    dns_list="$(join_by_comma $(cat "${resolv_conf}" | grep nameserver | grep -e '\.' | cut -d' ' -f2))"
+    if [ "${dns_list}" == "127.0.0.53" ]; then
+      continue
+    fi
+  done
+
   if [ "${dns_list}" == "127.0.0.53" ]; then
+    log_warn "DNS servers were not found, using defaults"
     dns_list="1.1.1.1"
   fi
 
