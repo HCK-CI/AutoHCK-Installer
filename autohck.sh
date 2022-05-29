@@ -24,7 +24,7 @@ install_ruby() {
       ;;
 
     *)
-      log_fatal "Distributive '$lsb_dist' is unsupported. Please compile QEMU manually."
+      log_fatal "Distributive '$lsb_dist' is unsupported. Please install Ruby manually."
       ;;
   esac
 
