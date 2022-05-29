@@ -31,7 +31,7 @@ install_ruby() {
 
   curl -sSL https://get.rvm.io | bash -s stable
 
-  source /etc/profile.d/rvm.sh
+  [ ! -f /etc/profile.d/rvm.sh ] || source /etc/profile.d/rvm.sh
   rvm install 3.0
 
   gem update --system
