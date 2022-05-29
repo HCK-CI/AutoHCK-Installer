@@ -15,12 +15,13 @@ install_ruby() {
   case "$lsb_dist" in
     ubuntu)
       sudo apt update
-      sudo apt -y install tar
+      sudo apt -y install tar openssl libssl-dev curl libcurl4 \
+        libcurl3-gnutls libcurl4-openssl-dev
       ;;
 
     fedora)
       sudo dnf makecache
-      sudo dnf -y install tar
+      sudo dnf -y install tar openssl openssl-devel curl curl-devel
       ;;
 
     *)
