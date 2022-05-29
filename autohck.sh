@@ -34,7 +34,7 @@ install_ruby() {
   [ ! -f /etc/profile.d/rvm.sh ] || source /etc/profile.d/rvm.sh
   [ ! -f "${HOME}/.rvm/scripts/rvm" ] || source "${HOME}/.rvm/scripts/rvm"
 
-  rvm install 3.0
+  rvm install 3.0.4
 
   gem update --system
 
