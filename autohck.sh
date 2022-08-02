@@ -20,8 +20,15 @@ install_ruby() {
       ;;
 
     fedora)
-      sudo dnf makecache
-      sudo dnf -y install tar openssl openssl-devel curl curl-devel
+      case "$( get_distribution_variant )" in
+        silverblue)
+          rpm-ostree install -A --allow-inactive --idempotent tar openssl openssl-devel curl curl-devel
+          ;;
+        *)
+          sudo dnf makecache
+          sudo dnf -y install tar openssl openssl-devel curl curl-devel
+          ;;
+        esac
       ;;
 
     *)
@@ -71,8 +78,15 @@ install_deps_autohck() {
       ;;
 
     fedora)
-      sudo dnf makecache
-      sudo dnf -y install net-tools ethtool bridge-utils genisoimage jq
+      case "$( get_distribution_variant )" in
+        silverblue)
+          rpm-ostree install -A --allow-inactive --idempotent net-tools ethtool bridge-utils genisoimage jq
+          ;;
+        *)
+          sudo dnf makecache
+          sudo dnf -y install net-tools ethtool bridge-utils genisoimage jq
+          ;;
+        esac
       ;;
 
     *)
