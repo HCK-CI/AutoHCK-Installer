@@ -51,14 +51,6 @@ install_ruby() {
   curl -Lks 'https://git.io/rg-ssl' | ruby
 }
 
-run_bundle() {
-  if [ "$(id -u)" == "0" ]; then
-    bundle "$@"
-  else
-    rvmsudo bundle "$@" || sudo bundle "$@"
-  fi
-}
-
 install_deps_autohck() {
   log_info "Installing AutoHCK dependencies"
 
@@ -98,6 +90,7 @@ post_clone_AUTOHCK() {
 
   (
     cd "${auto_hck_dir}"
-    run_bundle install --retry=32
+    bundle config path vendor/bundle
+    bundle install --retry=32
   )
 }
