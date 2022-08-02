@@ -28,7 +28,7 @@ for i in "$@"; do
 done
 
 command_exists jq || log_fatal "jq command does not exist"
-command_exists docker || log_fatal "docker command does not exist"
+command_exists docker || command_exists podman || log_fatal "Compatible OCI runtime does not exist"
 
 NET_BRIDGE=br_autohck
 NET_BRIDGE_SUBNET=192.168.0.
