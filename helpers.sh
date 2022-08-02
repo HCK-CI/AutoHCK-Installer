@@ -12,6 +12,16 @@ get_distribution() {
     echo "$lsb_dist" | tr '[:upper:]' '[:lower:]'
 }
 
+get_distribution_variant() {
+  variant=""
+
+  if [ -r /etc/os-release ]; then
+    variant="$(. /etc/os-release && echo "$VARIANT_ID")"
+  fi
+
+  echo "$variant" | tr '[:upper:]' '[:lower:]'
+}
+
 command_exists() {
     command -v "$@" > /dev/null 2>&1
 }

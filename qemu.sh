@@ -19,12 +19,23 @@ install_deps_qemu() {
       ;;
 
     fedora)
-      sudo dnf makecache
-      sudo dnf install -y git gcc g++ make meson pkg-config zlib-devel glib2-devel pixman-devel libtool \
-        dh-autoreconf bridge-utils libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel \
-        libnfs-devel libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
-        libfdt-devel libu2f-server-devel libu2f-host-devel libglusterfs-devel librados-devel \
-        spice-server-devel libusb-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
+      case "$( get_distribution_variant )" in
+        silverblue)
+          rpm-ostree install -A --allow-inactive --idempotent git gcc g++ make meson pkg-config zlib-devel glib2-devel pixman-devel libtool \
+            dh-autoreconf bridge-utils libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel \
+            libnfs-devel libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
+            libfdt-devel libu2f-server-devel libu2f-host-devel libglusterfs-devel librados-devel \
+            spice-server-devel libusb-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
+          ;;
+        *)
+          sudo dnf makecache
+          sudo dnf install -y git gcc g++ make meson pkg-config zlib-devel glib2-devel pixman-devel libtool \
+            dh-autoreconf bridge-utils libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel \
+            libnfs-devel libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
+            libfdt-devel libu2f-server-devel libu2f-host-devel libglusterfs-devel librados-devel \
+            spice-server-devel libusb-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
+          ;;
+        esac
       ;;
 
     *)
