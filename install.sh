@@ -11,7 +11,6 @@ source "${work_dir}/dependencies.sh"
 source "${work_dir}/logger.sh"
 source "${work_dir}/helpers.sh"
 source "${work_dir}/qemu.sh"
-source "${work_dir}/dhcp.sh"
 source "${work_dir}/autohck.sh"
 
 for i in "$@"; do
@@ -28,10 +27,6 @@ for i in "$@"; do
 done
 
 command_exists jq || log_fatal "jq command does not exist"
-command_exists docker || command_exists podman || log_fatal "Compatible OCI runtime does not exist"
-
-NET_BRIDGE=br_autohck
-NET_BRIDGE_SUBNET=192.168.0.
 
 [ ! -f "${bootstrap}" ] || source "${bootstrap}"
 
@@ -39,8 +34,6 @@ repos_dir="$(from_env_or_read "REPOS_DIR" "Please provide path to repos director
 iso_path="$(from_env_or_read "ISO_PATH" "Please provide path to ISO directory")"
 images_path="$(from_env_or_read "IMAGES_PATH" "Please provide path to images directory")"
 workspace_path="$(from_env_or_read "WORKSPACE_PATH" "Please provide path to workspace directory")"
-net_bridge="$(from_env_or_read "NET_BRIDGE" "Please provide AutoHCK bridge name")"
-net_bridge_subnet="$(from_env_or_read "NET_BRIDGE_SUBNET" "Please provide AutoHCK bridge subnet")"
 
 echo "REPOS_DIR='${repos_dir}'" > "${bootstrap}"
 echo >>"${bootstrap}"
@@ -48,8 +41,6 @@ echo "ISO_PATH='${iso_path}'" >>"${bootstrap}"
 echo "IMAGES_PATH='${images_path}'" >>"${bootstrap}"
 echo "WORKSPACE_PATH='${workspace_path}'" >>"${bootstrap}"
 echo >>"${bootstrap}"
-echo "NET_BRIDGE='${net_bridge}'" >>"${bootstrap}"
-echo "NET_BRIDGE_SUBNET='${net_bridge_subnet}'" >>"${bootstrap}"
 echo >>"${bootstrap}"
 
 mkdir -vp "${repos_dir}" "${iso_path}" "${images_path}" "${workspace_path}"

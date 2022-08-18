@@ -20,14 +20,11 @@ jq -n \
     --arg fs_daemon_share_path "${WORKSPACE_PATH}/fs_share" \
     --arg images_path "${IMAGES_PATH}" \
     --arg fs_test_image "${IMAGES_PATH}/fs_test_image.qcow2" \
-    --arg net_bridge "${NET_BRIDGE}" \
-    --arg net_bridge_subnet "${NET_BRIDGE_SUBNET}" \
     --arg iso_path "${ISO_PATH}" \
     --arg workspace_path "${WORKSPACE_PATH}" \
     '{
         "config.json": {
           "iso_path": $iso_path,
-          "ip_segment": $net_bridge_subnet,
           "extra_software": $extra_software,
           "workspace_path": $workspace_path,
           "toolshck_path": $tools_hck,
@@ -47,6 +44,5 @@ jq -n \
             "fs_daemon_share_path": $fs_daemon_share_path,
             "images_path": $images_path,
             "fs_test_image": $fs_test_image,
-            "world_net_bridge": $net_bridge,
         }
      }'

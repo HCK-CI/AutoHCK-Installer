@@ -66,17 +66,17 @@ install_deps_autohck() {
   case "$lsb_dist" in
     ubuntu)
       sudo apt update
-      sudo apt -y install net-tools ethtool bridge-utils mkisofs jq
+      sudo apt -y install slirp4netns net-tools ethtool mkisofs jq
       ;;
 
     fedora)
       case "$( get_distribution_variant )" in
         silverblue)
-          rpm-ostree install -A --allow-inactive --idempotent net-tools ethtool bridge-utils genisoimage jq
+          rpm-ostree install -A --allow-inactive --idempotent slirp4netns net-tools ethtool genisoimage jq
           ;;
         *)
           sudo dnf makecache
-          sudo dnf -y install net-tools ethtool bridge-utils genisoimage jq
+          sudo dnf -y install slirp4netns net-tools ethtool genisoimage jq
           ;;
         esac
       ;;
@@ -96,7 +96,7 @@ post_clone_AUTOHCK() {
     install_ruby
   fi
 
-  commands_to_check=( ifconfig ethtool brctl mkisofs jq )
+  commands_to_check=( slirp4netns ifconfig ethtool mkisofs jq )
   for cmd_to_check in "${commands_to_check[@]}"; do
     command_exists "${cmd_to_check}" || install_deps_autohck
     command_exists "${cmd_to_check}" || log_fatal "${cmd_to_check} command does not exist"
