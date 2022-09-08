@@ -69,7 +69,7 @@ compile_qemu() {
 check_qemu() {
   qemu_dir="$(realpath "${1}")"
 
-  [ -f "${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64" ] || return 1
+  "${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64" -enable-kvm -monitor stdio -nographic -serial none <<< q
   [ -f "${qemu_dir}/build/qemu-img" ] || return 1
   [ -f "${qemu_dir}/build/contrib/ivshmem-server/ivshmem-server" ] || return 1
   [ -f "${qemu_dir}/build/tools/virtiofsd/virtiofsd" ] || return 1
