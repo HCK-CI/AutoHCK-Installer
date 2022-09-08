@@ -26,6 +26,9 @@ for i in "$@"; do
   esac
 done
 
+[ -r /dev/kvm ] || log_fatal '/dev/kvm is not readable. Make sure /dev/kvm has right permissions and the user belongs to the corresponding group.'
+[ -w /dev/kvm ] || log_fatal '/dev/kvm is not writable. Make sure /dev/kvm has right permissions and the user belongs to the corresponding group.'
+
 command_exists jq || log_fatal "jq command does not exist"
 
 [ ! -f "${bootstrap}" ] || source "${bootstrap}"
