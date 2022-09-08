@@ -69,17 +69,10 @@ compile_qemu() {
 check_qemu() {
   qemu_dir="$(realpath "${1}")"
 
-  if [ -d "${qemu_dir}/build" ]; then
-    [ -f "${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64" ] || return 1
-    [ -f "${qemu_dir}/build/qemu-img" ] || return 1
-    [ -f "${qemu_dir}/build/contrib/ivshmem-server/ivshmem-server" ] || return 1
-    [ -f "${qemu_dir}/build/tools/virtiofsd/virtiofsd" ] || return 1
-  else
-    [ -f "${qemu_dir}/x86_64-softmmu/qemu-system-x86_64" ] || return 1
-    [ -f "${qemu_dir}/qemu-img" ] || return 1
-    [ -f "${qemu_dir}/ivshmem-server" ] || return 1
-    [ -f "${qemu_dir}/virtiofsd" ] || return 1
-  fi
+  [ -f "${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64" ] || return 1
+  [ -f "${qemu_dir}/build/qemu-img" ] || return 1
+  [ -f "${qemu_dir}/build/contrib/ivshmem-server/ivshmem-server" ] || return 1
+  [ -f "${qemu_dir}/build/tools/virtiofsd/virtiofsd" ] || return 1
 
   return 0
 }
