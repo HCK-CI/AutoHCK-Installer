@@ -11,7 +11,7 @@ DEPENDENCIES=(
 )
 
 QEMU_GIT=https://github.com/qemu/qemu.git
-QEMU_REF=v6.1.0
+QEMU_REF=v7.1.0
 # QEMU_DIR=
 
 TOOLSHCK_GIT=https://github.com/HCK-CI/toolsHCK.git
