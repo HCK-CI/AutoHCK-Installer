@@ -14,7 +14,7 @@ install_deps_qemu() {
         libpixman-1-dev dh-autoreconf bridge-utils libpng-dev libjpeg-dev libsdl2-dev libgtk-3-dev \
         libnfs-dev libseccomp-dev libiscsi-dev libzstd-dev libcurl4-openssl-dev libsdl2-image-dev \
         libkeyutils-dev libfdt-dev libu2f-server-dev libu2f-host-dev libglusterfs-dev librados-dev \
-        libncursesw5-dev libspice-protocol-dev libspice-server-dev libusb-dev libusb-1.0-0-dev \
+        libncursesw5-dev libspice-protocol-dev libspice-server-dev libusb-1.0-0-dev \
         libusbredirparser-dev libcap-ng-dev libcap-dev libaio-dev
       ;;
 
@@ -25,7 +25,7 @@ install_deps_qemu() {
             dh-autoreconf bridge-utils libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel \
             libnfs-devel libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
             libfdt-devel libu2f-server-devel libu2f-host-devel libglusterfs-devel librados-devel \
-            spice-server-devel libusb-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
+            spice-server-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
           ;;
         *)
           sudo dnf makecache
@@ -33,7 +33,7 @@ install_deps_qemu() {
             dh-autoreconf bridge-utils libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel \
             libnfs-devel libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
             libfdt-devel libu2f-server-devel libu2f-host-devel libglusterfs-devel librados-devel \
-            spice-server-devel libusb-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
+            spice-server-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
           ;;
         esac
       ;;
