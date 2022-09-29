@@ -80,17 +80,10 @@ check_qemu() {
 get_config_qemu() {
   qemu_dir="$(realpath "${1}")"
 
-  if [ -d "${qemu_dir}/build" ]; then
-    echo "QEMU_BIN='${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64'"
-    echo "QEMU_IMG_BIN='${qemu_dir}/build/qemu-img'"
-    echo "IVSHMEM_SERVER_BIN='${qemu_dir}/build/contrib/ivshmem-server/ivshmem-server'"
-    echo "FS_DAEMON_BIN='${qemu_dir}/build/tools/virtiofsd/virtiofsd'"
-  else
-    echo "QEMU_BIN='${qemu_dir}/x86_64-softmmu/qemu-system-x86_64'"
-    echo "QEMU_IMG_BIN='${qemu_dir}/qemu-img'"
-    echo "IVSHMEM_SERVER_BIN='${qemu_dir}/ivshmem-server'"
-    echo "FS_DAEMON_BIN='${qemu_dir}/virtiofsd'"
-  fi
+  echo "QEMU_BIN='${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64'"
+  echo "QEMU_IMG_BIN='${qemu_dir}/build/qemu-img'"
+  echo "IVSHMEM_SERVER_BIN='${qemu_dir}/build/contrib/ivshmem-server/ivshmem-server'"
+  echo "FS_DAEMON_BIN='${qemu_dir}/build/tools/virtiofsd/virtiofsd'"
 }
 
 post_clone_QEMU() {
