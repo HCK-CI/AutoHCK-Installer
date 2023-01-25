@@ -44,13 +44,13 @@ install_ruby() {
   [ ! -f /etc/profile.d/rvm.sh ] || source /etc/profile.d/rvm.sh
   [ ! -f "${HOME}/.rvm/scripts/rvm" ] || source "${HOME}/.rvm/scripts/rvm"
 
-  rvm install 3.0.4
+  rvm install 3.0.5
 
   if [ has_openssl_3 ]; then
     log_info "You system use OpenSSL 3.x. This version is not fully supported by ruby. " \
       "Installing OpenSSL gem for SSL support."
-    curl -L https://rubygems.org/downloads/openssl-3.0.0.gem -o /tmp/openssl-3.0.0.gem
-    gem install /tmp/openssl-3.0.0.gem
+    curl -L https://rubygems.org/downloads/openssl-3.1.0.gem -o /tmp/openssl-3.1.0.gem
+    gem install /tmp/openssl-3.1.0.gem
   fi
 
   gem update --system
