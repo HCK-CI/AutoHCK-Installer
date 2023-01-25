@@ -17,7 +17,13 @@ install_deps_qemu() {
         libncursesw5-dev libspice-protocol-dev libspice-server-dev libusb-1.0-0-dev \
         libusbredirparser-dev libcap-ng-dev libcap-dev libaio-dev
       ;;
-
+    centos)
+      sudo dnf makecache
+      sudo dnf install -y git gcc g++ make meson pkg-config zlib-devel glib2-devel pixman-devel libtool \
+        libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel bzip2 \
+        nfs-utils libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
+        libfdt-devel librados-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
+      ;;
     fedora)
       case "$( get_distribution_variant )" in
         silverblue)
