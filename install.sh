@@ -80,7 +80,7 @@ for dependency in "${DEPENDENCIES[@]}"; do
 
             already_ref=0
             for ref in "${current_refs[@]}"; do
-                if [ "$(echo ${ref} | tr -d '\n')" == "${repo_ref}" ]; then
+                if [ "$(echo ${ref} | tr -d '\n' | tr -d ',')" == "${repo_ref}" ]; then
                     already_ref=1
                 fi
             done
