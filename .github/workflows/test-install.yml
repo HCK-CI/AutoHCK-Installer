@@ -1,0 +1,20 @@
+name: Test install
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        images: ['fedora:34', 'fedora:37', 'ubuntu:20', 'ubuntu:22', 'centos:9']
+      fail-fast: false
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Run
+      run: bash tests/test.sh ${{ matrix.images }}
