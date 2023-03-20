@@ -51,3 +51,13 @@ has_openssl_3() {
     local openssl_version="$(openssl version 2>/dev/null || true)"
     [[ $openssl_version = "OpenSSL 3"?* ]]
 }
+
+is_redefined_by_file() {
+    var_name="${1}"
+    file="${2}"
+
+    var_value1="${!var_name}"
+    var_value2="$(source "${file}"; echo "${!var_name}")"
+
+    [[ "${var_value1}" != "${var_value2}" ]]
+}
