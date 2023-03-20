@@ -6,8 +6,9 @@ export INSTALL_SILENT=false
 
 work_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 bootstrap="${work_dir}/bootstrap"
+dependencies="${work_dir}/dependencies.sh"
 
-source "${work_dir}/dependencies.sh"
+source "${dependencies}"
 source "${work_dir}/logger.sh"
 source "${work_dir}/helpers.sh"
 source "${work_dir}/qemu.sh"
@@ -58,6 +59,10 @@ for dependency in "${DEPENDENCIES[@]}"; do
     dependency_dir_var="${dependency}_DIR"
     dependency_git_var="${dependency}_GIT"
     dependency_ref_var="${dependency}_REF"
+
+    if is_redefined_by_file "${dependency_ref_var}" "${dependencies}"; then
+        echo "${dependency_ref_var}='${!dependency_ref_var}'" >>"${bootstrap}"
+    fi
 
     repo_url="${!dependency_git_var}"
     repo_name="$(basename ${repo_url})"
