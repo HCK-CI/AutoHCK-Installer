@@ -69,7 +69,7 @@ for dependency in "${DEPENDENCIES[@]}"; do
         log_info "${dependency} dir overridden: ${!dependency_dir_var}"
         repo_path="${!dependency_dir_var}"
     fi
-    echo "${dependency}_DIR='${repo_path}'" >>"${bootstrap}"
+    echo "${dependency_dir_var}='${repo_path}'" >>"${bootstrap}"
 
     source "${bootstrap}"
 
