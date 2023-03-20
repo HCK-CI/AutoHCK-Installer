@@ -2,13 +2,21 @@
 
 set -e
 
+import_keys() {
+  keys=( 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB )
+  servers=( hkp://keyserver.ubuntu.com hkp://keys.openpgp.org )
+
+  for server in "${servers[@]}"; do
+    gpg2 --keyserver "${server}" --recv-keys "${keys[@]}" && return
+  done
+
+  log_warn "Can't load keys from any key servers. Importing keys manually."
+  curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+  curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -
+}
+
 install_ruby() {
   log_info "Installing Ruby"
-
-  # get keys from https://rvm.io/
-  gpg2 --recv-keys \
-    409B6B1796C275462A1703113804BB82D39DC0E3 \
-    7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 
   lsb_dist="$( get_distribution )"
 
@@ -40,6 +48,9 @@ install_ruby() {
       log_fatal "Distributive '$lsb_dist' is unsupported. Please install Ruby manually."
       ;;
   esac
+
+  # get keys from https://rvm.io/
+  import_keys
 
   curl -sSL https://get.rvm.io | bash -s stable
 
