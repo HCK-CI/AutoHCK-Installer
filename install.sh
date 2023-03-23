@@ -12,6 +12,7 @@ source "${dependencies}"
 source "${work_dir}/logger.sh"
 source "${work_dir}/helpers.sh"
 source "${work_dir}/qemu.sh"
+source "${work_dir}/virtiofsd.sh"
 source "${work_dir}/autohck.sh"
 
 for i in "$@"; do

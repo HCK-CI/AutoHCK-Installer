@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DEPENDENCIES=(
+#    VIRTIOFSD
     QEMU
     TOOLSHCK
     HLK_SETUP_SCRIPTS
@@ -9,6 +10,10 @@ DEPENDENCIES=(
     HCK_FILTERS
     AUTOHCK
 )
+
+VIRTIOFSD_GIT=https://gitlab.com/virtio-fs/virtiofsd.git
+VIRTIOFSD_REF=v1.5.1
+# VIRTIOFSD_DIR=
 
 QEMU_GIT=https://github.com/qemu/qemu.git
 QEMU_REF=v7.1.0

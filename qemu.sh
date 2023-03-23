@@ -88,7 +88,10 @@ check_qemu() {
   "${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64" "${qemu_args[@]}" <<< q
   [ -f "${qemu_dir}/build/qemu-img" ] || return 1
   [ -f "${qemu_dir}/build/contrib/ivshmem-server/ivshmem-server" ] || return 1
-  [ -f "${qemu_dir}/build/tools/virtiofsd/virtiofsd" ] || return 1
+
+  if [ ! -f "${qemu_dir}/build/tools/virtiofsd/virtiofsd" ]; then
+    [ -f "${FS_DAEMON_BIN}" ] || return 1
+  fi
 
   return 0
 }
@@ -99,7 +102,7 @@ get_config_qemu() {
   echo "QEMU_BIN='${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64'"
   echo "QEMU_IMG_BIN='${qemu_dir}/build/qemu-img'"
   echo "IVSHMEM_SERVER_BIN='${qemu_dir}/build/contrib/ivshmem-server/ivshmem-server'"
-  echo "FS_DAEMON_BIN='${qemu_dir}/build/tools/virtiofsd/virtiofsd'"
+  [ -f "${FS_DAEMON_BIN}" ] || echo "FS_DAEMON_BIN='${qemu_dir}/build/tools/virtiofsd/virtiofsd'"
 }
 
 post_clone_QEMU() {
