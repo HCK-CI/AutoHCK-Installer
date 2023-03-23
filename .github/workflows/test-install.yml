@@ -18,3 +18,22 @@ jobs:
 
     - name: Run
       run: bash tests/test.sh ${{ matrix.images }}
+  install_master:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        images: ['fedora:34', 'fedora:37', 'ubuntu:20', 'ubuntu:22', 'centos:9']
+      fail-fast: false
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set QEMU_REF to master
+      run: echo 'QEMU_REF=master' >> dependencies.sh
+
+    - name: Add VIRTIOFSD to DEPENDENCIES
+      run: echo 'DEPENDENCIES=(VIRTIOFSD ${DEPENDENCIES[@]})' >> dependencies.sh
+
+    - name: Run
+      run: bash tests/test.sh ${{ matrix.images }}
