@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DEPENDENCIES=(
-#    VIRTIOFSD
+    VIRTIOFSD
     QEMU
     TOOLSHCK
     HLK_SETUP_SCRIPTS
@@ -16,7 +16,7 @@ VIRTIOFSD_REF=v1.5.1
 # VIRTIOFSD_DIR=
 
 QEMU_GIT=https://github.com/qemu/qemu.git
-QEMU_REF=v7.1.0
+QEMU_REF=v8.0.0
 # QEMU_DIR=
 
 TOOLSHCK_GIT=https://github.com/HCK-CI/toolsHCK.git
