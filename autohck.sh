@@ -27,6 +27,7 @@ install_ruby() {
         libcurl3-gnutls libcurl4-openssl-dev
       ;;
     centos)
+      sudo dnf config-manager --set-enabled crb
       sudo dnf makecache
       # package curl-minimal conflicts with curl provided by curl
       # add '--allowerasing' to command line to replace conflicting packages
@@ -78,6 +79,7 @@ install_deps_autohck() {
       sudo apt -y install slirp4netns net-tools ethtool mkisofs jq
       ;;
     centos)
+      sudo dnf config-manager --set-enabled crb
       sudo dnf makecache
       sudo dnf -y install slirp4netns net-tools ethtool genisoimage jq
       ;;

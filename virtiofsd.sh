@@ -13,6 +13,7 @@ install_deps_virtiofsd() {
       sudo apt-get install -y libcap-ng-dev libseccomp-dev build-essential curl
       ;;
     centos)
+      sudo dnf config-manager --set-enabled crb
       sudo dnf makecache
       sudo dnf --allowerasing install -y libcap-ng-devel libseccomp-devel gcc curl
       ;;

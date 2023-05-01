@@ -18,6 +18,7 @@ install_deps_qemu() {
         libusbredirparser-dev libcap-ng-dev libcap-dev libaio-dev
       ;;
     centos)
+      sudo dnf config-manager --set-enabled crb
       sudo dnf makecache
       sudo dnf install -y git gcc g++ make meson pkg-config zlib-devel glib2-devel pixman-devel libtool \
         libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel bzip2 \
