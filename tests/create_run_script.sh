@@ -28,7 +28,7 @@ case "${test_dist}" in
     echo apt install -y git jq sudo gnupg2 >> "${test_script}"
     ;;
   centos)
-    echo dnf makecache
+    echo dnf makecache >> "${test_script}"
     echo dnf install -y git jq which sudo dnf-plugins-core >> "${test_script}"
     echo dnf config-manager --set-enabled crb >> "${test_script}"
     ;;
