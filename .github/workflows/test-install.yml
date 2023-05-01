@@ -32,8 +32,5 @@ jobs:
     - name: Set QEMU_REF to master
       run: echo 'QEMU_REF=master' >> dependencies.sh
 
-    - name: Add VIRTIOFSD to DEPENDENCIES
-      run: echo 'DEPENDENCIES=(VIRTIOFSD ${DEPENDENCIES[@]})' >> dependencies.sh
-
     - name: Run
       run: bash tests/test.sh ${{ matrix.images }}
