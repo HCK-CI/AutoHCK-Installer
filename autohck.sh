@@ -76,21 +76,21 @@ install_deps_autohck() {
   case "$lsb_dist" in
     ubuntu)
       sudo apt update
-      sudo apt -y install slirp4netns net-tools ethtool mkisofs jq
+      sudo apt -y install slirp4netns net-tools ethtool xorriso jq
       ;;
     centos)
       sudo dnf config-manager --set-enabled crb
       sudo dnf makecache
-      sudo dnf -y install slirp4netns net-tools ethtool genisoimage jq
+      sudo dnf -y install slirp4netns net-tools ethtool xorriso jq
       ;;
     fedora)
       case "$( get_distribution_variant )" in
         silverblue)
-          rpm-ostree install -A --allow-inactive --idempotent slirp4netns net-tools ethtool genisoimage jq
+          rpm-ostree install -A --allow-inactive --idempotent slirp4netns net-tools ethtool xorriso jq
           ;;
         *)
           sudo dnf makecache
-          sudo dnf -y install slirp4netns net-tools ethtool genisoimage jq
+          sudo dnf -y install slirp4netns net-tools ethtool xorriso jq
           ;;
         esac
       ;;
@@ -110,7 +110,7 @@ post_clone_AUTOHCK() {
     install_ruby
   fi
 
-  commands_to_check=( slirp4netns ifconfig ethtool mkisofs jq )
+  commands_to_check=( slirp4netns ifconfig ethtool xorriso jq )
   for cmd_to_check in "${commands_to_check[@]}"; do
     command_exists "${cmd_to_check}" || install_deps_autohck
     command_exists "${cmd_to_check}" || log_fatal "${cmd_to_check} command does not exist"

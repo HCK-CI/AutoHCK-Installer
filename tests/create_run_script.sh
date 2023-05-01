@@ -50,3 +50,10 @@ esac
 
 
 echo bash /src/install.sh --silent >> "${test_script}"
+
+echo xorriso -as mkisofs \
+  -iso-level 4 -J -l -D -N \
+  -joliet-long -relaxed-filenames -V "INSTALLER" \
+  -old-exclude Kits \
+  '"${REPOS_DIR}/HLK-Setup-Scripts.git"' \
+  '-o "${WORKSPACE_PATH}/scripts.iso"' >> "${test_script}"
