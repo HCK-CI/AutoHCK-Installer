@@ -33,6 +33,10 @@ install_ruby() {
       # add '--allowerasing' to command line to replace conflicting packages
       sudo dnf -y --allowerasing install tar openssl openssl-devel curl curl-devel
       ;;
+    rhel)
+      sudo dnf makecache
+      sudo dnf -y install tar openssl openssl-devel curl curl-devel
+      ;;
     fedora)
       case "$( get_distribution_variant )" in
         silverblue)
@@ -80,6 +84,10 @@ install_deps_autohck() {
       ;;
     centos)
       sudo dnf config-manager --set-enabled crb
+      sudo dnf makecache
+      sudo dnf -y install slirp4netns net-tools ethtool xorriso jq
+      ;;
+    rhel)
       sudo dnf makecache
       sudo dnf -y install slirp4netns net-tools ethtool xorriso jq
       ;;

@@ -25,6 +25,13 @@ install_deps_qemu() {
         nfs-utils libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
         libfdt-devel librados-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
       ;;
+    rhel)
+      sudo dnf makecache
+      sudo dnf install -y git gcc g++ make meson pkg-config zlib-devel glib2-devel pixman-devel libtool \
+        libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel bzip2 \
+        nfs-utils libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
+        libfdt-devel librados-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
+      ;;
     fedora)
       case "$( get_distribution_variant )" in
         silverblue)
