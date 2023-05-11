@@ -17,6 +17,10 @@ install_deps_virtiofsd() {
       sudo dnf makecache
       sudo dnf --allowerasing install -y libcap-ng-devel libseccomp-devel gcc curl
       ;;
+    rhel)
+      sudo dnf makecache
+      sudo dnf install -y libcap-ng-devel libseccomp-devel gcc curl
+      ;;
     fedora)
       case "$( get_distribution_variant )" in
         silverblue)
