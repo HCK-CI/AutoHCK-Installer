@@ -31,11 +31,11 @@ install_ruby() {
       sudo dnf makecache
       # package curl-minimal conflicts with curl provided by curl
       # add '--allowerasing' to command line to replace conflicting packages
-      sudo dnf -y --allowerasing install tar openssl openssl-devel curl curl-devel
+      sudo dnf -y --allowerasing install tar openssl openssl-devel curl curl-devel libyaml-devel
       ;;
     rhel)
       sudo dnf makecache
-      sudo dnf -y install tar openssl openssl-devel curl curl-devel
+      sudo dnf -y install tar openssl openssl-devel curl curl-devel libyaml-devel
       ;;
     fedora)
       case "$( get_distribution_variant )" in
