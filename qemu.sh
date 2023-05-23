@@ -15,7 +15,7 @@ install_deps_qemu() {
         libnfs-dev libseccomp-dev libiscsi-dev libzstd-dev libcurl4-openssl-dev libsdl2-image-dev \
         libkeyutils-dev libfdt-dev libu2f-server-dev libu2f-host-dev libglusterfs-dev librados-dev \
         libncursesw5-dev libspice-protocol-dev libspice-server-dev libusb-1.0-0-dev \
-        libusbredirparser-dev libcap-ng-dev libcap-dev libaio-dev
+        libusbredirparser-dev libcap-ng-dev libcap-dev libaio-dev python3-venv
       ;;
     centos)
       sudo dnf config-manager --set-enabled crb
