@@ -80,27 +80,61 @@ install_deps_autohck() {
   case "$lsb_dist" in
     ubuntu)
       sudo apt update
-      sudo apt -y install slirp4netns net-tools ethtool xorriso jq
+      sudo apt -y install slirp4netns net-tools ethtool xorriso jq ovmf
       ;;
     centos)
       sudo dnf config-manager --set-enabled crb
       sudo dnf makecache
-      sudo dnf -y install slirp4netns net-tools ethtool xorriso jq
+      sudo dnf -y install slirp4netns net-tools ethtool xorriso jq edk2-ovmf
       ;;
     rhel)
       sudo dnf makecache
-      sudo dnf -y install slirp4netns net-tools ethtool xorriso jq
+      sudo dnf -y install slirp4netns net-tools ethtool xorriso jq edk2-ovmf
       ;;
     fedora)
       case "$( get_distribution_variant )" in
         silverblue)
-          rpm-ostree install -A --allow-inactive --idempotent slirp4netns net-tools ethtool xorriso jq
+          rpm-ostree install -A --allow-inactive --idempotent slirp4netns net-tools ethtool xorriso jq edk2-ovmf
           ;;
         *)
           sudo dnf makecache
-          sudo dnf -y install slirp4netns net-tools ethtool xorriso jq
+          sudo dnf -y install slirp4netns net-tools ethtool xorriso jq edk2-ovmf
           ;;
         esac
+      ;;
+
+    *)
+      log_fatal "Distributive '$lsb_dist' is unsupported. Please compile QEMU manually."
+      ;;
+  esac
+}
+
+get_fw_config() {
+  log_info "Generating OVMF FW config"
+
+  lsb_dist="$( get_distribution )"
+
+  case "$lsb_dist" in
+    ubuntu)
+      echo "OVMF_CODE='/usr/share/OVMF/OVMF_CODE_4M.fd'"
+      echo "OVMF_VARS='/usr/share/OVMF/OVMF_VARS_4M.fd'"
+
+      echo "OVMF_CODE_SB='/usr/share/OVMF/OVMF_CODE_4M.ms.fd'"
+      echo "OVMF_VARS_SB='/usr/share/OVMF/OVMF_VARS_4M.ms.fd'"
+      ;;
+    centos|rhel)
+      echo "OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE.fd'"
+      echo "OVMF_VARS='/usr/share/edk2/ovmf/OVMF_VARS.fd'"
+
+      echo "OVMF_CODE_SB='/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd'"
+      echo "OVMF_VARS_SB='/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd'"
+      ;;
+    fedora)
+      echo "OVMF_CODE='/usr/share/edk2/ovmf-4m/OVMF_CODE.fd'"
+      echo "OVMF_VARS='/usr/share/edk2/ovmf-4m/OVMF_VARS.fd'"
+
+      echo "OVMF_CODE_SB='/usr/share/edk2/ovmf-4m/OVMF_CODE.secboot.fd'"
+      echo "OVMF_VARS_SB='/usr/share/edk2/ovmf-4m/OVMF_VARS.secboot.fd'"
       ;;
 
     *)
@@ -123,6 +157,9 @@ post_clone_AUTOHCK() {
     command_exists "${cmd_to_check}" || install_deps_autohck
     command_exists "${cmd_to_check}" || log_fatal "${cmd_to_check} command does not exist"
   done
+
+  get_fw_config >>"${bootstrap}"
+  echo >>"${bootstrap}"
 
   (
     cd "${auto_hck_dir}"

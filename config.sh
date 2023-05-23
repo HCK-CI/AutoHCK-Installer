@@ -13,6 +13,10 @@ jq -n \
     --arg extra_software "${EXTRA_SOFTWARE_DIR}" \
     --arg playlists_path "${HLK_PLAYLISTS_DIR}" \
     --arg filters_path "${HCK_FILTERS_DIR}/UpdateFilters.sql" \
+    --arg ovmf_code "${OVMF_CODE}" \
+    --arg ovmf_vars "${OVMF_VARS}" \
+    --arg ovmf_code_sb "${OVMF_CODE_SB}" \
+    --arg ovmf_vars_sb "${OVMF_VARS_SB}" \
     --arg qemu_bin "${QEMU_BIN}" \
     --arg qemu_img_bin "${QEMU_IMG_BIN}" \
     --arg ivshmem_server_bin "${IVSHMEM_SERVER_BIN}" \
@@ -35,6 +39,16 @@ jq -n \
         "lib/engines/hcktest/hcktest.json": {
           "playlists_path": $playlists_path,
           "filters_path": $filters_path
+        },
+        "lib/setupmanagers/qemuhck/fw.json": {
+          "uefi": {
+            "binary": $ovmf_code,
+            "nvram": $ovmf_vars
+          },
+          "uefi_sb": {
+            "binary": $ovmf_code_sb,
+            "nvram": $ovmf_vars_sb
+          }
         },
         "lib/setupmanagers/qemuhck/qemu_machine.json": {
             "qemu_bin": $qemu_bin,
