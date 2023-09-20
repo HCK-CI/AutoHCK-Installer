@@ -31,6 +31,8 @@ done
 if [ "${DISABLE_KVM_CHECK}" != "yes" ]; then
     [ -r /dev/kvm ] || log_fatal '/dev/kvm is not readable. Make sure /dev/kvm has right permissions and the user belongs to the corresponding group.'
     [ -w /dev/kvm ] || log_fatal '/dev/kvm is not writable. Make sure /dev/kvm has right permissions and the user belongs to the corresponding group.'
+    [ -r /dev/vhost-net ] || log_fatal '/dev/vhost-net is not readable. Make sure /dev/vhost-net has right permissions and the user belongs to the corresponding group.'
+    [ -w /dev/vhost-net ] || log_fatal '/dev/vhost-net is not writable. Make sure /dev/vhost-net has right permissions and the user belongs to the corresponding group.'
 fi
 
 command_exists jq || log_fatal "jq command does not exist"

@@ -90,10 +90,14 @@ check_qemu() {
   )
 
   if [ "${DISABLE_KVM_CHECK}" != "yes" ]; then
-    qemu_args+=(-enable-kvm)
+    qemu_args+=(
+      -enable-kvm
+      -netdev tap,id=net0,vhost=on,script=no -device e1000,netdev=net0
+    )
   fi
 
-  "${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64" "${qemu_args[@]}" <<< q
+  unshare --user --net --map-root-user \
+    "${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64" "${qemu_args[@]}" <<< q
   [ -f "${qemu_dir}/build/qemu-img" ] || return 1
   [ -f "${qemu_dir}/build/contrib/ivshmem-server/ivshmem-server" ] || return 1
 
