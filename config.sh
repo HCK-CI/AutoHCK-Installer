@@ -42,11 +42,10 @@ jq -n \
         },
         "lib/setupmanagers/qemuhck/fw.json": {
           "uefi": {
-            "binary": $ovmf_code,
-            "nvram": $ovmf_vars
-          },
-          "uefi_sb": {
-            "binary": $ovmf_code_sb,
+            "binary": {
+              "insecure": $ovmf_code,
+              "secure": $ovmf_code_sb
+            },
             "nvram": $ovmf_vars_sb
           }
         },
