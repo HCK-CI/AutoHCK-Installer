@@ -13,6 +13,7 @@ declare -A test_image_list test_dist_list
 test_image_list[centos:9]=quay.io/centos/centos:stream9
 test_image_list[fedora:34]=fedora:34
 test_image_list[fedora:37]=fedora:37
+test_image_list[fedora:39]=fedora:39
 test_image_list[ubuntu:20]=ubuntu:20.04
 test_image_list[ubuntu:22]=ubuntu:22.04
 
