@@ -39,7 +39,7 @@ case "${test_dist}" in
         ;;
       *)
         echo dnf makecache
-        echo dnf install -y git jq which >> "${test_script}"
+        echo dnf install -y git jq which procps >> "${test_script}"
         ;;
       esac
     ;;
