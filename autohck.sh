@@ -116,31 +116,36 @@ get_fw_config() {
 
   case "$lsb_dist" in
     ubuntu)
-      echo "OVMF_CODE='/usr/share/OVMF/OVMF_CODE_4M.fd'"
-      echo "OVMF_VARS='/usr/share/OVMF/OVMF_VARS_4M.fd'"
+      OVMF_CODE='/usr/share/OVMF/OVMF_CODE_4M.fd'
 
-      echo "OVMF_CODE_SB='/usr/share/OVMF/OVMF_CODE_4M.ms.fd'"
-      echo "OVMF_VARS_SB='/usr/share/OVMF/OVMF_VARS_4M.ms.fd'"
+      OVMF_CODE_SB='/usr/share/OVMF/OVMF_CODE_4M.ms.fd'
+      OVMF_VARS_SB='/usr/share/OVMF/OVMF_VARS_4M.ms.fd'
       ;;
     centos|rhel)
-      echo "OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE.fd'"
-      echo "OVMF_VARS='/usr/share/edk2/ovmf/OVMF_VARS.fd'"
+      OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE.fd'
 
-      echo "OVMF_CODE_SB='/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd'"
-      echo "OVMF_VARS_SB='/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd'"
+      OVMF_CODE_SB='/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd'
+      OVMF_VARS_SB='/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd'
       ;;
     fedora)
-      echo "OVMF_CODE='/usr/share/edk2/ovmf-4m/OVMF_CODE.fd'"
-      echo "OVMF_VARS='/usr/share/edk2/ovmf-4m/OVMF_VARS.fd'"
+      OVMF_CODE='/usr/share/edk2/ovmf-4m/OVMF_CODE.fd'
 
-      echo "OVMF_CODE_SB='/usr/share/edk2/ovmf-4m/OVMF_CODE.secboot.fd'"
-      echo "OVMF_VARS_SB='/usr/share/edk2/ovmf-4m/OVMF_VARS.secboot.fd'"
+      OVMF_CODE_SB='/usr/share/edk2/ovmf-4m/OVMF_CODE.secboot.fd'
+      OVMF_VARS_SB='/usr/share/edk2/ovmf-4m/OVMF_VARS.secboot.fd'
       ;;
 
     *)
       log_fatal "Distributive '$lsb_dist' is unsupported. Please compile QEMU manually."
       ;;
   esac
+
+  [ -f "${OVMF_CODE}" ] || log_fatal "OVMF_CODE file '$OVMF_CODE' does not exist. Please configure OVMF manually."
+  [ -f "${OVMF_CODE_SB}" ] || log_fatal "OVMF_CODE_SB file '$OVMF_CODE_SB' does not exist. Please configure OVMF manually."
+  [ -f "${OVMF_VARS_SB}" ] || log_fatal "OVMF_VARS file '$OVMF_VARS_SB' does not exist. Please configure OVMF manually."
+
+  echo "OVMF_CODE='${OVMF_CODE}'"
+  echo "OVMF_CODE_SB='${OVMF_CODE_SB}'"
+  echo "OVMF_VARS_SB='${OVMF_VARS_SB}'"
 }
 
 post_clone_AUTOHCK() {

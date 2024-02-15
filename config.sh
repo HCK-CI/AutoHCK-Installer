@@ -14,7 +14,6 @@ jq -n \
     --arg playlists_path "${HLK_PLAYLISTS_DIR}" \
     --arg filters_path "${HCK_FILTERS_DIR}/UpdateFilters.sql" \
     --arg ovmf_code "${OVMF_CODE}" \
-    --arg ovmf_vars "${OVMF_VARS}" \
     --arg ovmf_code_sb "${OVMF_CODE_SB}" \
     --arg ovmf_vars_sb "${OVMF_VARS_SB}" \
     --arg qemu_bin "${QEMU_BIN}" \
