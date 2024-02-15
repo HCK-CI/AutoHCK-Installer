@@ -92,7 +92,7 @@ check_qemu() {
   if [ "${DISABLE_KVM_CHECK}" != "yes" ]; then
     qemu_args+=(
       -enable-kvm
-      -netdev tap,id=net0,vhost=on,script=no -device e1000,netdev=net0
+      -netdev tap,id=net0,vhost=on,script=no,downscript=no -device e1000,netdev=net0
     )
   fi
 
