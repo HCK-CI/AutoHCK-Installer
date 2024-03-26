@@ -121,13 +121,7 @@ get_fw_config() {
       OVMF_CODE_SB='/usr/share/OVMF/OVMF_CODE_4M.ms.fd'
       OVMF_VARS_SB='/usr/share/OVMF/OVMF_VARS_4M.ms.fd'
       ;;
-    centos|rhel)
-      OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE.fd'
-
-      OVMF_CODE_SB='/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd'
-      OVMF_VARS_SB='/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd'
-      ;;
-    fedora)
+    centos|rhel|fedora)
       OVMF_CODE='/usr/share/edk2/ovmf-4m/OVMF_CODE.fd'
       if [ ! -f "${OVMF_CODE}" ]; then OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE_4M.secboot.qcow2'; fi
 
@@ -136,6 +130,11 @@ get_fw_config() {
 
       OVMF_VARS_SB='/usr/share/edk2/ovmf-4m/OVMF_VARS.secboot.fd'
       if [ ! -f "${OVMF_VARS_SB}" ]; then OVMF_VARS_SB='/usr/share/edk2/ovmf/OVMF_VARS_4M.secboot.qcow2'; fi
+
+      # RHEL/CentOS and Fedora 34 have different paths
+      if [ ! -f "${OVMF_CODE}" ]; then OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE.fd'; fi
+      if [ ! -f "${OVMF_CODE_SB}" ]; then OVMF_CODE_SB='/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd'; fi
+      if [ ! -f "${OVMF_VARS_SB}" ]; then OVMF_VARS_SB='/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd'; fi
       ;;
 
     *)
