@@ -97,7 +97,7 @@ check_qemu() {
   fi
 
   unshare --user --net --map-root-user \
-    "${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64" "${qemu_args[@]}" <<< q
+    "${qemu_dir}/build/qemu-system-x86_64" "${qemu_args[@]}" <<< q
   [ -f "${qemu_dir}/build/qemu-img" ] || return 1
   [ -f "${qemu_dir}/build/contrib/ivshmem-server/ivshmem-server" ] || return 1
 
@@ -111,7 +111,7 @@ check_qemu() {
 get_config_qemu() {
   qemu_dir="$(realpath "${1}")"
 
-  echo "QEMU_BIN='${qemu_dir}/build/x86_64-softmmu/qemu-system-x86_64'"
+  echo "QEMU_BIN='${qemu_dir}/build/qemu-system-x86_64'"
   echo "QEMU_IMG_BIN='${qemu_dir}/build/qemu-img'"
   echo "IVSHMEM_SERVER_BIN='${qemu_dir}/build/contrib/ivshmem-server/ivshmem-server'"
   [ -f "${FS_DAEMON_BIN}" ] || echo "FS_DAEMON_BIN='${qemu_dir}/build/tools/virtiofsd/virtiofsd'"
