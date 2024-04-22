@@ -39,6 +39,38 @@ install_deps_virtiofsd() {
   esac
 }
 
+install_virtiofsd_package() {
+  log_info "Installing virtiofsd package"
+
+  lsb_dist="$( get_distribution )"
+
+  case "$lsb_dist" in
+    ubuntu)
+      sudo apt-get update
+      sudo apt-get install -y virtiofsd
+      ;;
+    rhel|centos)
+      sudo dnf makecache
+      sudo dnf install -y virtiofsd
+      ;;
+    fedora)
+      case "$( get_distribution_variant )" in
+        silverblue)
+          rpm-ostree install -A --allow-inactive --idempotent virtiofsd
+          ;;
+        *)
+          sudo dnf makecache
+          sudo dnf install -y virtiofsd
+          ;;
+        esac
+      ;;
+
+    *)
+      log_fatal "Distributive '$lsb_dist' is unsupported. Please compile QEMU manually."
+      ;;
+  esac
+}
+
 install_rust() {
   log_info "Installing Rust"
 
@@ -69,10 +101,18 @@ check_virtiofsd() {
   return 0
 }
 
-get_config_virtiofsd() {
+get_config_virtiofsd_repo() {
   virtiofsd_dir="$(realpath "${1}")"
 
   echo "FS_DAEMON_BIN='${virtiofsd_dir}/target/release/virtiofsd'"
+}
+
+get_config_virtiofsd_package() {
+  FS_DAEMON_BIN='/usr/libexec/virtiofsd'
+
+  [ -f "${FS_DAEMON_BIN}" ] || log_fatal "FS_DAEMON_BIN file '$FS_DAEMON_BIN' does not exist. Please configure virtiofsd manually."
+
+  echo "FS_DAEMON_BIN='${FS_DAEMON_BIN}'"
 }
 
 post_clone_VIRTIOFSD() {
@@ -95,10 +135,17 @@ post_clone_VIRTIOFSD() {
 }
 
 process_VIRTIOFSD() {
-  log_info "VIRTIOFSD repository custom processing"
+  log_info "VIRTIOFSD dependency custom processing"
 
-  virtiofsd_dir="$(realpath "${1}")"
+  virtiofsd_package="${2}"
 
-  get_config_virtiofsd "${virtiofsd_dir}" >>"${bootstrap}"
+  if [ "x${virtiofsd_package}" == "x" ]; then
+    virtiofsd_dir="$(realpath "${1}")"
+    get_config_virtiofsd_repo "${virtiofsd_dir}" >>"${bootstrap}"
+  else
+    install_virtiofsd_package
+    get_config_virtiofsd_package >>"${bootstrap}"
+  fi
+
   echo >>"${bootstrap}"
 }
