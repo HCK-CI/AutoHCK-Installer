@@ -18,3 +18,30 @@ jobs:
 
     - name: Run
       run: bash tests/test.sh ${{ matrix.images }}
+
+  install_repo:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        images: ['fedora:39', 'ubuntu:22', 'centos:9']
+      fail-fast: false
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Disable QEMU_PACKAGE
+      run: |
+        echo 'QEMU_PACKAGE=' > bootstrap
+        echo 'QEMU_GIT=https://github.com/qemu/qemu.git' >> bootstrap
+        echo 'QEMU_REF=v9.0.0' >> bootstrap
+
+
+    - name: Disable VIRTIOFSD_PACKAGE
+      run: |
+        echo 'VIRTIOFSD_PACKAGE=' >> bootstrap
+        echo 'VIRTIOFSD_GIT=https://gitlab.com/virtio-fs/virtiofsd.git' >> bootstrap
+        echo 'VIRTIOFSD_REF=v1.11.0' >> bootstrap
+
+    - name: Run
+      run: bash tests/test.sh ${{ matrix.images }}
