@@ -62,66 +62,78 @@ for dependency in "${DEPENDENCIES[@]}"; do
     dependency_dir_var="${dependency}_DIR"
     dependency_git_var="${dependency}_GIT"
     dependency_ref_var="${dependency}_REF"
+    dependency_package_var="${dependency}_PACKAGE"
 
     if is_redefined_by_file "${dependency_ref_var}" "${dependencies}"; then
         echo "${dependency_ref_var}='${!dependency_ref_var}'" >>"${bootstrap}"
     fi
 
-    repo_url="${!dependency_git_var}"
-    repo_name="$(basename ${repo_url})"
-    repo_ref="${!dependency_ref_var}"
-
-    if [ -z "${!dependency_dir_var}" ]; then
-        repo_path="${repos_dir}/${repo_name}"
-    else
-        log_info "${dependency} dir overridden: ${!dependency_dir_var}"
-        repo_path="${!dependency_dir_var}"
+    if is_redefined_by_file "${dependency_package_var}" "${dependencies}"; then
+        echo "${dependency_package_var}='${!dependency_package_var}'" >>"${bootstrap}"
     fi
-    echo "${dependency_dir_var}='${repo_path}'" >>"${bootstrap}"
 
-    source "${bootstrap}"
+    dependency_package="${!dependency_package_var}"
 
-    if [ -d "${repo_path}" ]; then
-        (
-            cd "${repo_path}"
+    if [ -n "${dependency_package}" ]; then
+        log_info "Package for ${dependency} is defined"
+        echo "${dependency_package_var}='${!dependency_package_var}'" >>"${bootstrap}"
+    else
+        repo_url="${!dependency_git_var}"
+        repo_name="$(basename ${repo_url})"
+        repo_ref="${!dependency_ref_var}"
 
-            git fetch
-            mapfile -d ' ' -t current_refs < <(git log -n1 --format='%h %H %D')
+        if [ -z "${!dependency_dir_var}" ]; then
+            repo_path="${repos_dir}/${repo_name}"
+        else
+            log_info "${dependency} dir overridden: ${!dependency_dir_var}"
+            repo_path="${!dependency_dir_var}"
+        fi
+        echo "${dependency_dir_var}='${repo_path}'" >>"${bootstrap}"
 
-            already_ref=0
-            for ref in "${current_refs[@]}"; do
-                if [ "$(echo ${ref} | tr -d '\n' | tr -d ',')" == "${repo_ref}" ]; then
-                    already_ref=1
-                fi
-            done
+        source "${bootstrap}"
 
-            if [ "${already_ref}" == "0" ]; then
+        if [ -d "${repo_path}" ]; then
+            (
+                cd "${repo_path}"
+
                 git fetch
+                mapfile -d ' ' -t current_refs < <(git log -n1 --format='%h %H %D')
+
+                already_ref=0
+                for ref in "${current_refs[@]}"; do
+                    if [ "$(echo ${ref} | tr -d '\n' | tr -d ',')" == "${repo_ref}" ]; then
+                        already_ref=1
+                    fi
+                done
+
+                if [ "${already_ref}" == "0" ]; then
+                    git fetch
+                    git checkout "${repo_ref}"
+                    if [ "$(LC_ALL=C type -t "post_clone_${dependency}")" == "function" ]; then
+                        log_info "Execution post_clone_${dependency} ${repo_path}"
+                        "post_clone_${dependency}" "${repo_path}"
+                    fi
+                else
+                    log_info "${repo_name} already at ${repo_ref}"
+                fi
+            )
+        else
+            git clone "${repo_url}" "${repo_path}"
+            (
+                cd "${repo_path}"
                 git checkout "${repo_ref}"
+
                 if [ "$(LC_ALL=C type -t "post_clone_${dependency}")" == "function" ]; then
                     log_info "Execution post_clone_${dependency} ${repo_path}"
                     "post_clone_${dependency}" "${repo_path}"
                 fi
-            else
-                log_info "${repo_name} already at ${repo_ref}"
-            fi
-        )
-    else
-        git clone "${repo_url}" "${repo_path}"
-        (
-            cd "${repo_path}"
-            git checkout "${repo_ref}"
-
-            if [ "$(LC_ALL=C type -t "post_clone_${dependency}")" == "function" ]; then
-                log_info "Execution post_clone_${dependency} ${repo_path}"
-                "post_clone_${dependency}" "${repo_path}"
-            fi
-        )
+            )
+        fi
     fi
 
     if [ "$(LC_ALL=C type -t "process_${dependency}")" == "function" ]; then
         log_info "Execution "process_${dependency}" ${repo_path}"
-        "process_${dependency}" "${repo_path}"
+        "process_${dependency}" "${repo_path}" "${dependency_package}"
     fi
 done
 
