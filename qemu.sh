@@ -15,7 +15,8 @@ install_deps_qemu() {
         libnfs-dev libseccomp-dev libiscsi-dev libzstd-dev libcurl4-openssl-dev libsdl2-image-dev \
         libkeyutils-dev libfdt-dev libu2f-server-dev libu2f-host-dev libglusterfs-dev librados-dev \
         libncursesw5-dev libspice-protocol-dev libspice-server-dev libusb-1.0-0-dev \
-        libusbredirparser-dev libcap-ng-dev libcap-dev libaio-dev python3-venv
+        libusbredirparser-dev libcap-ng-dev libcap-dev libaio-dev python3-venv \
+        python3-tomli
       ;;
     centos)
       sudo dnf config-manager --set-enabled crb
@@ -23,14 +24,16 @@ install_deps_qemu() {
       sudo dnf install -y git gcc g++ make meson pkg-config zlib-devel glib2-devel pixman-devel libtool \
         libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel bzip2 \
         nfs-utils libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
-        libfdt-devel librados-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
+        libfdt-devel librados-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel \
+        python3-tomli
       ;;
     rhel)
       sudo dnf makecache
       sudo dnf install -y git gcc g++ make meson pkg-config zlib-devel glib2-devel pixman-devel libtool \
         libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel bzip2 \
         nfs-utils libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
-        libfdt-devel librados-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
+        libfdt-devel librados-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel \
+        python3-tomli
       ;;
     fedora)
       case "$( get_distribution_variant )" in
@@ -39,7 +42,8 @@ install_deps_qemu() {
             dh-autoreconf bridge-utils libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel \
             libnfs-devel libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
             libfdt-devel libu2f-server-devel libu2f-host-devel libglusterfs-devel librados-devel \
-            spice-server-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
+            spice-server-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel \
+            python3-tomli
           ;;
         *)
           sudo dnf makecache
@@ -47,7 +51,8 @@ install_deps_qemu() {
             dh-autoreconf bridge-utils libpng-devel libjpeg-devel SDL2-devel gtk3-devel libaio-devel \
             libnfs-devel libseccomp-devel libiscsi-devel libzstd-devel curl-devel keyutils-libs-devel \
             libfdt-devel libu2f-server-devel libu2f-host-devel libglusterfs-devel librados-devel \
-            spice-server-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel
+            spice-server-devel libusb1-devel usbredir-devel libcap-ng-devel libattr-devel \
+            python3-tomli
           ;;
         esac
       ;;
