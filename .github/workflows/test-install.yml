@@ -34,3 +34,23 @@ jobs:
 
     - name: Run
       run: bash tests/test.sh ${{ matrix.images }}
+
+  install_pkg:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        images: ['fedora:39', 'centos:9']
+      fail-fast: false
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Enable QEMU_PACKAGE
+      run: echo 'QEMU_PACKAGE=TRUE' > bootstrap
+
+    - name: Enable VIRTIOFSD_PACKAGE
+      run: echo 'VIRTIOFSD_PACKAGE=TRUE' >> bootstrap
+
+    - name: Run
+      run: bash tests/test.sh ${{ matrix.images }}

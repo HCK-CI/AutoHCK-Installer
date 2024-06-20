@@ -63,6 +63,38 @@ install_deps_qemu() {
   esac
 }
 
+install_qemu_package() {
+  log_info "Installing QEMU package"
+
+  lsb_dist="$( get_distribution )"
+
+  case "$lsb_dist" in
+    ubuntu)
+      sudo apt-get update
+      sudo apt-get install -y qemu-system
+      ;;
+    centos | rhel)
+      sudo dnf makecache
+      sudo dnf install -y qemu-kvm
+      ;;
+    fedora)
+      case "$( get_distribution_variant )" in
+        silverblue)
+          rpm-ostree install -A --allow-inactive --idempotent qemu
+          ;;
+        *)
+          sudo dnf makecache
+          sudo dnf install -y qemu
+          ;;
+        esac
+      ;;
+
+    *)
+      log_fatal "Distributive '$lsb_dist' is unsupported. Please compile QEMU manually."
+      ;;
+  esac
+}
+
 compile_qemu() {
   log_info "Compiling QEMU"
 
@@ -113,13 +145,37 @@ check_qemu() {
   return 0
 }
 
-get_config_qemu() {
+get_config_qemu_repo() {
   qemu_dir="$(realpath "${1}")"
 
   echo "QEMU_BIN='${qemu_dir}/build/qemu-system-x86_64'"
   echo "QEMU_IMG_BIN='${qemu_dir}/build/qemu-img'"
   echo "IVSHMEM_SERVER_BIN='${qemu_dir}/build/contrib/ivshmem-server/ivshmem-server'"
   [ -f "${FS_DAEMON_BIN}" ] || echo "FS_DAEMON_BIN='${qemu_dir}/build/tools/virtiofsd/virtiofsd'"
+}
+
+get_config_qemu_package() {
+  lsb_dist="$( get_distribution )"
+
+  case "$lsb_dist" in
+    ubuntu|fedora)
+      QEMU_BIN='/usr/bin/qemu-system-x86_64'
+      QEMU_IMG_BIN='/usr/bin/qemu-img'
+      ;;
+    centos|rhel)
+      QEMU_BIN='/usr/libexec/qemu-kvm'
+      QEMU_IMG_BIN='/usr/bin/qemu-img'
+      ;;
+    *)
+      log_fatal "Distributive '$lsb_dist' is unsupported. Please compile QEMU manually."
+      ;;
+  esac
+
+  [ -f "${QEMU_BIN}" ] || log_fatal "QEMU_BIN file '$QEMU_BIN' does not exist. Please configure QEMU manually."
+  [ -f "${QEMU_IMG_BIN}" ] || log_fatal "QEMU_IMG_BIN file '$QEMU_IMG_BIN' does not exist. Please configure QEMU manually."
+
+  echo "QEMU_BIN='${QEMU_BIN}'"
+  echo "QEMU_IMG_BIN='${QEMU_IMG_BIN}'"
 }
 
 post_clone_QEMU() {
@@ -137,10 +193,17 @@ post_clone_QEMU() {
 }
 
 process_QEMU() {
-  log_info "QEMU repository custom processing"
+  log_info "QEMU dependency custom processing"
 
-  qemu_dir="$(realpath "${1}")"
+  qemu_package="${2}"
 
-  get_config_qemu "${qemu_dir}" >>"${bootstrap}"
+  if [ "x${qemu_package}" == "x" ]; then
+    qemu_dir="$(realpath "${1}")"
+    get_config_qemu_repo "${qemu_dir}" >>"${bootstrap}"
+  else
+    install_qemu_package
+    get_config_qemu_package >>"${bootstrap}"
+  fi
+
   echo >>"${bootstrap}"
 }

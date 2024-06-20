@@ -14,10 +14,12 @@ DEPENDENCIES=(
 VIRTIOFSD_GIT=https://gitlab.com/virtio-fs/virtiofsd.git
 VIRTIOFSD_REF=v1.11.0
 # VIRTIOFSD_DIR=
+# VIRTIOFSD_PACKAGE=TRUE
 
 QEMU_GIT=https://github.com/qemu/qemu.git
 QEMU_REF=v9.0.0
 # QEMU_DIR=
+# QEMU_PACKAGE=TRUE
 
 TOOLSHCK_GIT=https://github.com/HCK-CI/toolsHCK.git
 TOOLSHCK_REF=7a4e0e85fdfc09edecc09203e8c25a06ade69710
