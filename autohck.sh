@@ -166,12 +166,16 @@ post_clone_AUTOHCK() {
     command_exists "${cmd_to_check}" || log_fatal "${cmd_to_check} command does not exist"
   done
 
-  get_fw_config >>"${bootstrap}"
-  echo >>"${bootstrap}"
-
   (
     cd "${auto_hck_dir}"
     bundle config path vendor/bundle
     bundle install --retry=32
   )
+}
+
+process_AUTOHCK() {
+  log_info "AUTOHCK repository custom processing"
+
+  get_fw_config >>"${bootstrap}"
+  echo >>"${bootstrap}"
 }
