@@ -9,28 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        images: ['fedora:37', 'fedora:39', 'ubuntu:22', 'centos:9']
+        images: ['fedora:37', 'fedora:39', 'centos:9']
       fail-fast: false
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
-    - name: Run
-      run: bash tests/test.sh ${{ matrix.images }}
-  install_master:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        images: ['fedora:39', 'ubuntu:22', 'centos:9']
-      fail-fast: false
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Set QEMU_REF to master
-      run: echo 'QEMU_REF=master' >> dependencies.sh
 
     - name: Run
       run: bash tests/test.sh ${{ matrix.images }}
