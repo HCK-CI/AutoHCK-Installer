@@ -269,16 +269,19 @@ process_QEMU() {
 
   qemu_package="${2}"
 
-  install_vm_deps
-  get_fw_config >>"${bootstrap}"
-
   if [ "x${qemu_package}" == "x" ]; then
     qemu_dir="$(realpath "${1}")"
     get_config_qemu_repo "${qemu_dir}" >>"${bootstrap}"
+    install_vm_deps
+  elif [ "x${qemu_package}" == "xINSTALLED" ]; then
+    log_info "Using preinstalled QEMU and VM dependencies"
+    get_config_qemu_package >>"${bootstrap}"
   else
     install_qemu_package
+    install_vm_deps
     get_config_qemu_package >>"${bootstrap}"
   fi
+  get_fw_config >>"${bootstrap}"
 
   source "${bootstrap}"
 
