@@ -174,6 +174,85 @@ get_config_qemu_package() {
   echo "QEMU_IMG_BIN='${QEMU_IMG_BIN}'"
 }
 
+install_vm_deps() {
+  log_info "Installing QEMU VM dependencies"
+
+  lsb_dist="$( get_distribution )"
+
+  case "$lsb_dist" in
+    ubuntu)
+      sudo apt update
+      sudo apt -y install ovmf swtpm swtpm-tools
+      ;;
+    centos)
+      sudo dnf config-manager --set-enabled crb
+      sudo dnf makecache
+      sudo dnf -y install edk2-ovmf swtpm swtpm-tools
+      ;;
+    rhel)
+      sudo dnf makecache
+      sudo dnf -y install edk2-ovmf swtpm swtpm-tools
+      ;;
+    fedora)
+      case "$( get_distribution_variant )" in
+        silverblue)
+          rpm-ostree install -A --allow-inactive --idempotent edk2-ovmf swtpm swtpm-tools
+          ;;
+        *)
+          sudo dnf makecache
+          sudo dnf -y install edk2-ovmf swtpm swtpm-tools
+          ;;
+        esac
+      ;;
+
+    *)
+      log_fatal "Distributive '$lsb_dist' is unsupported. Please install OVMF, SWTPM manually."
+      ;;
+  esac
+}
+
+get_fw_config() {
+  log_info "Generating OVMF FW config"
+
+  lsb_dist="$( get_distribution )"
+
+  case "$lsb_dist" in
+    ubuntu)
+      OVMF_CODE='/usr/share/OVMF/OVMF_CODE_4M.fd'
+
+      OVMF_CODE_SB='/usr/share/OVMF/OVMF_CODE_4M.ms.fd'
+      OVMF_VARS_SB='/usr/share/OVMF/OVMF_VARS_4M.ms.fd'
+      ;;
+    centos|rhel|fedora)
+      OVMF_CODE='/usr/share/edk2/ovmf-4m/OVMF_CODE.fd'
+      if [ ! -f "${OVMF_CODE}" ]; then OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE_4M.secboot.qcow2'; fi
+
+      OVMF_CODE_SB='/usr/share/edk2/ovmf-4m/OVMF_CODE.secboot.fd'
+      if [ ! -f "${OVMF_CODE_SB}" ]; then OVMF_CODE_SB='/usr/share/edk2/ovmf/OVMF_CODE_4M.qcow2'; fi
+
+      OVMF_VARS_SB='/usr/share/edk2/ovmf-4m/OVMF_VARS.secboot.fd'
+      if [ ! -f "${OVMF_VARS_SB}" ]; then OVMF_VARS_SB='/usr/share/edk2/ovmf/OVMF_VARS_4M.secboot.qcow2'; fi
+
+      # RHEL/CentOS and Fedora 34 have different paths
+      if [ ! -f "${OVMF_CODE}" ]; then OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE.fd'; fi
+      if [ ! -f "${OVMF_CODE_SB}" ]; then OVMF_CODE_SB='/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd'; fi
+      if [ ! -f "${OVMF_VARS_SB}" ]; then OVMF_VARS_SB='/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd'; fi
+      ;;
+
+    *)
+      log_fatal "Distributive '$lsb_dist' is unsupported. Please compile QEMU manually."
+      ;;
+  esac
+
+  [ -f "${OVMF_CODE}" ] || log_fatal "OVMF_CODE file '$OVMF_CODE' does not exist. Please configure OVMF manually."
+  [ -f "${OVMF_CODE_SB}" ] || log_fatal "OVMF_CODE_SB file '$OVMF_CODE_SB' does not exist. Please configure OVMF manually."
+  [ -f "${OVMF_VARS_SB}" ] || log_fatal "OVMF_VARS file '$OVMF_VARS_SB' does not exist. Please configure OVMF manually."
+
+  echo "OVMF_CODE='${OVMF_CODE}'"
+  echo "OVMF_CODE_SB='${OVMF_CODE_SB}'"
+  echo "OVMF_VARS_SB='${OVMF_VARS_SB}'"
+}
+
 post_clone_QEMU() {
   log_info "QEMU repository post clone"
 
@@ -189,6 +268,9 @@ process_QEMU() {
   log_info "QEMU dependency custom processing"
 
   qemu_package="${2}"
+
+  install_vm_deps
+  get_fw_config >>"${bootstrap}"
 
   if [ "x${qemu_package}" == "x" ]; then
     qemu_dir="$(realpath "${1}")"

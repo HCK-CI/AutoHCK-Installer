@@ -80,25 +80,25 @@ install_deps_autohck() {
   case "$lsb_dist" in
     ubuntu)
       sudo apt update
-      sudo apt -y install slirp4netns net-tools ethtool xorriso jq ovmf
+      sudo apt -y install slirp4netns net-tools ethtool xorriso jq
       ;;
     centos)
       sudo dnf config-manager --set-enabled crb
       sudo dnf makecache
-      sudo dnf -y install slirp4netns net-tools ethtool xorriso jq edk2-ovmf
+      sudo dnf -y install slirp4netns net-tools ethtool xorriso jq
       ;;
     rhel)
       sudo dnf makecache
-      sudo dnf -y install slirp4netns net-tools ethtool xorriso jq edk2-ovmf
+      sudo dnf -y install slirp4netns net-tools ethtool xorriso jq
       ;;
     fedora)
       case "$( get_distribution_variant )" in
         silverblue)
-          rpm-ostree install -A --allow-inactive --idempotent slirp4netns net-tools ethtool xorriso jq edk2-ovmf
+          rpm-ostree install -A --allow-inactive --idempotent slirp4netns net-tools ethtool xorriso jq
           ;;
         *)
           sudo dnf makecache
-          sudo dnf -y install slirp4netns net-tools ethtool xorriso jq edk2-ovmf
+          sudo dnf -y install slirp4netns net-tools ethtool xorriso jq
           ;;
         esac
       ;;
@@ -107,48 +107,6 @@ install_deps_autohck() {
       log_fatal "Distributive '$lsb_dist' is unsupported. Please compile QEMU manually."
       ;;
   esac
-}
-
-get_fw_config() {
-  log_info "Generating OVMF FW config"
-
-  lsb_dist="$( get_distribution )"
-
-  case "$lsb_dist" in
-    ubuntu)
-      OVMF_CODE='/usr/share/OVMF/OVMF_CODE_4M.fd'
-
-      OVMF_CODE_SB='/usr/share/OVMF/OVMF_CODE_4M.ms.fd'
-      OVMF_VARS_SB='/usr/share/OVMF/OVMF_VARS_4M.ms.fd'
-      ;;
-    centos|rhel|fedora)
-      OVMF_CODE='/usr/share/edk2/ovmf-4m/OVMF_CODE.fd'
-      if [ ! -f "${OVMF_CODE}" ]; then OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE_4M.secboot.qcow2'; fi
-
-      OVMF_CODE_SB='/usr/share/edk2/ovmf-4m/OVMF_CODE.secboot.fd'
-      if [ ! -f "${OVMF_CODE_SB}" ]; then OVMF_CODE_SB='/usr/share/edk2/ovmf/OVMF_CODE_4M.qcow2'; fi
-
-      OVMF_VARS_SB='/usr/share/edk2/ovmf-4m/OVMF_VARS.secboot.fd'
-      if [ ! -f "${OVMF_VARS_SB}" ]; then OVMF_VARS_SB='/usr/share/edk2/ovmf/OVMF_VARS_4M.secboot.qcow2'; fi
-
-      # RHEL/CentOS and Fedora 34 have different paths
-      if [ ! -f "${OVMF_CODE}" ]; then OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE.fd'; fi
-      if [ ! -f "${OVMF_CODE_SB}" ]; then OVMF_CODE_SB='/usr/share/edk2/ovmf/OVMF_CODE.secboot.fd'; fi
-      if [ ! -f "${OVMF_VARS_SB}" ]; then OVMF_VARS_SB='/usr/share/edk2/ovmf/OVMF_VARS.secboot.fd'; fi
-      ;;
-
-    *)
-      log_fatal "Distributive '$lsb_dist' is unsupported. Please compile QEMU manually."
-      ;;
-  esac
-
-  [ -f "${OVMF_CODE}" ] || log_fatal "OVMF_CODE file '$OVMF_CODE' does not exist. Please configure OVMF manually."
-  [ -f "${OVMF_CODE_SB}" ] || log_fatal "OVMF_CODE_SB file '$OVMF_CODE_SB' does not exist. Please configure OVMF manually."
-  [ -f "${OVMF_VARS_SB}" ] || log_fatal "OVMF_VARS file '$OVMF_VARS_SB' does not exist. Please configure OVMF manually."
-
-  echo "OVMF_CODE='${OVMF_CODE}'"
-  echo "OVMF_CODE_SB='${OVMF_CODE_SB}'"
-  echo "OVMF_VARS_SB='${OVMF_VARS_SB}'"
 }
 
 post_clone_AUTOHCK() {
@@ -176,6 +134,5 @@ post_clone_AUTOHCK() {
 process_AUTOHCK() {
   log_info "AUTOHCK repository custom processing"
 
-  get_fw_config >>"${bootstrap}"
   echo >>"${bootstrap}"
 }
