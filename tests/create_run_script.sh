@@ -29,7 +29,7 @@ case "${test_dist}" in
     ;;
   centos)
     echo dnf makecache >> "${test_script}"
-    echo dnf install -y git jq which sudo dnf-plugins-core procps >> "${test_script}"
+    echo dnf install -y git jq which sudo dnf-plugins-core procps gnupg2 >> "${test_script}"
     echo dnf config-manager --set-enabled crb >> "${test_script}"
     ;;
   fedora)

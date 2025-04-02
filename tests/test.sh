@@ -11,6 +11,7 @@ image_to_run="${1}"
 
 declare -A test_image_list test_dist_list
 test_image_list[centos:9]=quay.io/centos/centos:stream9
+test_image_list[centos:10]=quay.io/centos/centos:stream10
 test_image_list[fedora:34]=fedora:34
 test_image_list[fedora:37]=fedora:37
 test_image_list[fedora:39]=fedora:39
