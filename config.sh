@@ -8,7 +8,6 @@ bootstrap="${work_dir}/bootstrap"
 source "${bootstrap}"
 
 jq -n \
-    --arg tools_hck "${TOOLSHCK_DIR}/toolsHCK.ps1" \
     --arg hlk_setup_scripts "${HLK_SETUP_SCRIPTS_DIR}" \
     --arg extra_software "${EXTRA_SOFTWARE_DIR}" \
     --arg playlists_path "${HLK_PLAYLISTS_DIR}" \
@@ -30,7 +29,6 @@ jq -n \
           "iso_path": $iso_path,
           "extra_software": $extra_software,
           "workspace_path": $workspace_path,
-          "toolshck_path": $tools_hck,
         },
         "lib/engines/hckinstall/hckinstall.json": {
           "hck_setup_scripts_path": $hlk_setup_scripts,
