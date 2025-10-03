@@ -15,6 +15,7 @@ test_image_list[centos:10]=quay.io/centos/centos:stream10
 test_image_list[fedora:34]=fedora:34
 test_image_list[fedora:37]=fedora:37
 test_image_list[fedora:39]=fedora:39
+test_image_list[fedora:42]=fedora:42
 test_image_list[ubuntu:20]=ubuntu:20.04
 test_image_list[ubuntu:22]=ubuntu:22.04
 
