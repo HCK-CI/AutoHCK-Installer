@@ -40,11 +40,11 @@ install_ruby() {
     fedora)
       case "$( get_distribution_variant )" in
         silverblue)
-          rpm-ostree install -A --allow-inactive --idempotent tar openssl openssl-devel curl curl-devel
+          rpm-ostree install -A --allow-inactive --idempotent tar openssl openssl-devel curl curl-devel gcc
           ;;
         *)
           sudo dnf makecache
-          sudo dnf -y install tar openssl openssl-devel curl curl-devel
+          sudo dnf -y install tar openssl openssl-devel curl curl-devel gcc
           ;;
         esac
       ;;
