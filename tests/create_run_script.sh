@@ -38,7 +38,7 @@ case "${test_dist}" in
         log_fatal "Distributive '$lsb_dist/$test_dist_variant' is unsupported for test run."
         ;;
       *)
-        echo dnf makecache
+        echo dnf makecache >> "${test_script}"
         echo dnf install -y git jq which procps >> "${test_script}"
         ;;
       esac
