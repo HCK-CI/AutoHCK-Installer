@@ -24,12 +24,13 @@ jq -n \
     --arg fs_test_image "${IMAGES_PATH}/fs_test_image.qcow2" \
     --arg iso_path "${ISO_PATH}" \
     --arg workspace_path "${WORKSPACE_PATH}" \
+    --arg windows_password "${WINDOWS_PASSWORD}" \
     '{
-        "config.json": {
+        "config.json": ({
           "iso_path": $iso_path,
           "extra_software": $extra_software,
-          "workspace_path": $workspace_path,
-        },
+          "workspace_path": $workspace_path
+        } + if $windows_password != "" then {"windows_password": $windows_password} else {} end),
         "lib/engines/hckinstall/hckinstall.json": {
           "hck_setup_scripts_path": $hlk_setup_scripts,
         },

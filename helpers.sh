@@ -27,23 +27,26 @@ command_exists() {
 }
 
 from_env_or_read() {
-    env_name="${1}"
-    read_msg="${2}"
+    local env_name="${1}"
+    local read_msg="${2}"
+    local value
+    local default_value="${!env_name}"
 
-    if [ -z "${!env_name}" ]; then
+    if [ "${INSTALL_SILENT}" == "true" ]; then
+        echo "${default_value}"
+        return
+    fi
+
+    if [ -n "${default_value}" ]; then
+        read -r -p "${read_msg} [${default_value}]: " value
+        if [ -z "${value}" ]; then
+            echo "${default_value}"
+        else
+            echo "${value}"
+        fi
+    else
         read -r -p "${read_msg}: " value
         echo "${value}"
-    else
-        if [ "${INSTALL_SILENT}" == "true" ]; then
-            echo "${!env_name}"
-        else
-            read -r -p "${read_msg} [${!env_name}]: " value
-            if [ -z "${value}" ]; then
-                echo "${!env_name}"
-            else
-                echo "${value}"
-            fi
-        fi
     fi
 }
 
