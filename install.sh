@@ -43,12 +43,14 @@ repos_dir="$(from_env_or_read "REPOS_DIR" "Please provide path to repos director
 iso_path="$(from_env_or_read "ISO_PATH" "Please provide path to ISO directory")"
 images_path="$(from_env_or_read "IMAGES_PATH" "Please provide path to images directory")"
 workspace_path="$(from_env_or_read "WORKSPACE_PATH" "Please provide path to workspace directory")"
+windows_password="$(from_env_or_read "WINDOWS_PASSWORD" "Please provide HLK windows password (or press Enter to use default)")"
 
 echo "REPOS_DIR='${repos_dir}'" > "${bootstrap}"
 echo >>"${bootstrap}"
 echo "ISO_PATH='${iso_path}'" >>"${bootstrap}"
 echo "IMAGES_PATH='${images_path}'" >>"${bootstrap}"
 echo "WORKSPACE_PATH='${workspace_path}'" >>"${bootstrap}"
+echo "WINDOWS_PASSWORD='${windows_password}'" >>"${bootstrap}"
 echo >>"${bootstrap}"
 echo >>"${bootstrap}"
 
