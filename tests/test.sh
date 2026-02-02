@@ -12,12 +12,10 @@ image_to_run="${1}"
 declare -A test_image_list test_dist_list
 test_image_list[centos:9]=quay.io/centos/centos:stream9
 test_image_list[centos:10]=quay.io/centos/centos:stream10
-test_image_list[fedora:34]=fedora:34
-test_image_list[fedora:37]=fedora:37
-test_image_list[fedora:39]=fedora:39
+test_image_list[fedora:41]=fedora:41
 test_image_list[fedora:42]=fedora:42
-test_image_list[ubuntu:20]=ubuntu:20.04
-test_image_list[ubuntu:22]=ubuntu:22.04
+test_image_list[fedora:43]=fedora:43
+test_image_list[ubuntu:24]=ubuntu:24.04
 
 tee() { if test "$1" != "${1%/*}"; then mkdir -p ${1%/*}; fi &&
    command tee -a "$1"; }
