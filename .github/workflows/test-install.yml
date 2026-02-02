@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        images: ['fedora:39', 'fedora:42', 'centos:10']
+        images: ['fedora:41', 'fedora:43', 'centos:10']
       fail-fast: false
 
     steps:
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        images: ['fedora:39', 'ubuntu:22', 'centos:9']
+        images: ['fedora:41', 'ubuntu:24', 'centos:9']
       fail-fast: false
 
     steps:
