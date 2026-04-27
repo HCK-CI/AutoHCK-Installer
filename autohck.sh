@@ -2,6 +2,8 @@
 
 set -e
 
+RUBY_VERSION=3.3.7
+
 import_keys() {
   keys=( 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB )
   servers=( hkp://keyserver.ubuntu.com hkp://keys.openpgp.org )
@@ -62,7 +64,7 @@ install_ruby() {
   [ ! -f /etc/profile.d/rvm.sh ] || source /etc/profile.d/rvm.sh
   [ ! -f "${HOME}/.rvm/scripts/rvm" ] || source "${HOME}/.rvm/scripts/rvm"
 
-  rvm install 3.3.7
+  rvm install "${RUBY_VERSION}"
 
   gem update --system
 
@@ -116,6 +118,20 @@ post_clone_AUTOHCK() {
 
   if ! command_exists ruby; then
     install_ruby
+  else
+    result=$(ruby -e "puts Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('${RUBY_VERSION}')")
+    if [ "x${result}" != "xtrue" ]; then
+      log_warn "Ruby version is less than ${RUBY_VERSION}"
+      if command_exists rvm; then
+        log_info "Installing Ruby using rvm"
+        install_ruby
+      else
+        log_error "rvm command does not exist. AutoHCK Installer does not support installation of Ruby without rvm."
+        log_fatal "Please install Ruby version ${RUBY_VERSION} or greater manually."
+      fi
+    else
+      log_info "Ruby version is ${RUBY_VERSION} or greater"
+    fi
   fi
 
   commands_to_check=( slirp4netns ifconfig ethtool xorriso jq )
