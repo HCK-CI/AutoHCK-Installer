@@ -225,10 +225,10 @@ get_fw_config() {
       ;;
     centos|rhel|fedora)
       OVMF_CODE='/usr/share/edk2/ovmf-4m/OVMF_CODE.fd'
-      if [ ! -f "${OVMF_CODE}" ]; then OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE_4M.secboot.qcow2'; fi
+      if [ ! -f "${OVMF_CODE}" ]; then OVMF_CODE='/usr/share/edk2/ovmf/OVMF_CODE_4M.qcow2'; fi
 
       OVMF_CODE_SB='/usr/share/edk2/ovmf-4m/OVMF_CODE.secboot.fd'
-      if [ ! -f "${OVMF_CODE_SB}" ]; then OVMF_CODE_SB='/usr/share/edk2/ovmf/OVMF_CODE_4M.qcow2'; fi
+      if [ ! -f "${OVMF_CODE_SB}" ]; then OVMF_CODE_SB='/usr/share/edk2/ovmf/OVMF_CODE_4M.secboot.qcow2'; fi
 
       OVMF_VARS_SB='/usr/share/edk2/ovmf-4m/OVMF_VARS.secboot.fd'
       if [ ! -f "${OVMF_VARS_SB}" ]; then OVMF_VARS_SB='/usr/share/edk2/ovmf/OVMF_VARS_4M.secboot.qcow2'; fi
