@@ -55,5 +55,5 @@ echo xorriso -as mkisofs \
   -iso-level 4 -J -l -D -N \
   -joliet-long -relaxed-filenames -V "INSTALLER" \
   -old-exclude Kits \
-  '"${REPOS_DIR}/HLK-Setup-Scripts.git"' \
+  '"${REPOS_DIR}/extra-software.git"' \
   '-o "${WORKSPACE_PATH}/scripts.iso"' >> "${test_script}"
