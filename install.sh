@@ -15,6 +15,10 @@ source "${work_dir}/qemu.sh"
 source "${work_dir}/virtiofsd.sh"
 source "${work_dir}/autohck.sh"
 
+print_usage() {
+  echo "Usage: install.sh [--silent]" >&2
+}
+
 for i in "$@"; do
   case $i in
     --silent)
