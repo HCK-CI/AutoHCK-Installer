@@ -7,6 +7,8 @@ bootstrap="${work_dir}/bootstrap"
 
 source "${bootstrap}"
 
+workspace_path="${1:-${WORKSPACE_PATH}}"
+
 jq -n \
     --arg hlk_setup_scripts "${HLK_SETUP_SCRIPTS_DIR}" \
     --arg extra_software "${EXTRA_SOFTWARE_DIR}" \
@@ -19,11 +21,11 @@ jq -n \
     --arg qemu_img_bin "${QEMU_IMG_BIN}" \
     --arg ivshmem_server_bin "${IVSHMEM_SERVER_BIN}" \
     --arg fs_daemon_bin "${FS_DAEMON_BIN}" \
-    --arg fs_daemon_share_path "${WORKSPACE_PATH}/fs_share" \
+    --arg fs_daemon_share_path "${workspace_path}/fs_share" \
     --arg images_path "${IMAGES_PATH}" \
     --arg fs_test_image "${IMAGES_PATH}/fs_test_image.qcow2" \
     --arg iso_path "${ISO_PATH}" \
-    --arg workspace_path "${WORKSPACE_PATH}" \
+    --arg workspace_path "${workspace_path}" \
     --arg windows_password "${WINDOWS_PASSWORD}" \
     '{
         "config.json": ({

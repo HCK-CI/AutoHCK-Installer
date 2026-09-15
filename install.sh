@@ -46,19 +46,47 @@ command_exists jq || log_fatal "jq command does not exist"
 repos_dir="$(from_env_or_read "REPOS_DIR" "Please provide path to repos directory")"
 iso_path="$(from_env_or_read "ISO_PATH" "Please provide path to ISO directory")"
 images_path="$(from_env_or_read "IMAGES_PATH" "Please provide path to images directory")"
-workspace_path="$(from_env_or_read "WORKSPACE_PATH" "Please provide path to workspace directory")"
 windows_password="$(from_env_or_read "WINDOWS_PASSWORD" "Please provide HLK windows password (or press Enter to use default)")"
+
+workspace_paths=()
+if [ -n "${WORKSPACE_COUNT}" ]; then
+    if ! [[ "${WORKSPACE_COUNT}" =~ ^[1-9][0-9]*$ ]]; then
+        log_fatal "WORKSPACE_COUNT must be a positive integer"
+    fi
+
+    workspace_count="${WORKSPACE_COUNT}"
+
+    for (( workspace_index=1; workspace_index<=workspace_count; workspace_index++ )); do
+        workspace_env_name="$(workspace_path_env_name "${workspace_index}")"
+        workspace_path_value="$(from_env_or_read "${workspace_env_name}" "Please provide path to workspace ${workspace_index} directory")"
+
+        [ -n "${workspace_path_value}" ] || log_fatal "${workspace_env_name} is required when WORKSPACE_COUNT is set"
+
+        workspace_paths+=("${workspace_path_value}")
+    done
+else
+    workspace_path="$(from_env_or_read "WORKSPACE_PATH" "Please provide path to workspace directory")"
+    workspace_paths=("${workspace_path}")
+fi
 
 echo "REPOS_DIR='${repos_dir}'" > "${bootstrap}"
 echo >>"${bootstrap}"
 echo "ISO_PATH='${iso_path}'" >>"${bootstrap}"
 echo "IMAGES_PATH='${images_path}'" >>"${bootstrap}"
-echo "WORKSPACE_PATH='${workspace_path}'" >>"${bootstrap}"
+if [ -n "${WORKSPACE_COUNT}" ]; then
+    echo "WORKSPACE_COUNT='${workspace_count}'" >>"${bootstrap}"
+    for (( workspace_index=1; workspace_index<=workspace_count; workspace_index++ )); do
+        workspace_env_name="$(workspace_path_env_name "${workspace_index}")"
+        echo "${workspace_env_name}='${workspace_paths[$((workspace_index-1))]}'" >>"${bootstrap}"
+    done
+else
+    echo "WORKSPACE_PATH='${workspace_paths[0]}'" >>"${bootstrap}"
+fi
 echo "WINDOWS_PASSWORD='${windows_password}'" >>"${bootstrap}"
 echo >>"${bootstrap}"
 echo >>"${bootstrap}"
 
-mkdir -vp "${repos_dir}" "${iso_path}" "${images_path}" "${workspace_path}"
+mkdir -vp "${repos_dir}" "${iso_path}" "${images_path}" "${workspace_paths[@]}"
 
 log_info "Processing repositories"
 
@@ -143,17 +171,28 @@ for dependency in "${DEPENDENCIES[@]}"; do
     fi
 done
 
-log_info "Generating config overwrite file"
+if [ -n "${WORKSPACE_COUNT}" ]; then
+    log_info "Generating config overwrite files for ${workspace_count} workspaces"
 
-source "${work_dir}/config.sh" | tee "${AUTOHCK_DIR}/override.install.json"
+    for (( workspace_index=1; workspace_index<=workspace_count; workspace_index++ )); do
+        log_info "Generating override for workspace ${workspace_index}"
 
-if [ -f "${AUTOHCK_DIR}/override.json" ]; then
-    log_info "Old overwrite file present, merging..."
+        install_file="${AUTOHCK_DIR}/override.install.w${workspace_index}.json"
+        override_file="${AUTOHCK_DIR}/override.w${workspace_index}.json"
 
-    mv -vf "${AUTOHCK_DIR}/override.json" "${AUTOHCK_DIR}/override.old"
+        bash "${work_dir}/config.sh" "${workspace_paths[$((workspace_index-1))]}" | tee "${install_file}"
 
-    jq -s '.[0] * .[1]' "${AUTOHCK_DIR}/override.old" \
-        "${AUTOHCK_DIR}/override.install.json" | tee "${AUTOHCK_DIR}/override.json"
+        if [ "${workspace_index}" -eq 1 ]; then
+            install_override_file "${install_file}" "${override_file}" "${AUTOHCK_DIR}/override.json"
+        else
+            install_override_file "${install_file}" "${override_file}"
+        fi
+    done
+
+    cp -f "${AUTOHCK_DIR}/override.w1.json" "${AUTOHCK_DIR}/override.json"
 else
-    mv -vf "${AUTOHCK_DIR}/override.install.json" "${AUTOHCK_DIR}/override.json"
+    log_info "Generating config overwrite file"
+
+    bash "${work_dir}/config.sh" | tee "${AUTOHCK_DIR}/override.install.json"
+    install_override_file "${AUTOHCK_DIR}/override.install.json" "${AUTOHCK_DIR}/override.json"
 fi

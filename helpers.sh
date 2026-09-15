@@ -64,3 +64,40 @@ is_redefined_by_file() {
 
     [[ "${var_value1}" != "${var_value2}" ]]
 }
+
+workspace_path_env_name() {
+    if [ "${1}" -eq 1 ]; then
+        echo "WORKSPACE_PATH"
+    else
+        echo "WORKSPACE_PATH${1}"
+    fi
+}
+
+install_override_file() {
+    local install_file="${1}"
+    local override_file="${2}"
+    shift 2
+    local fallback_old_file=""
+
+    if [ -f "${override_file}" ]; then
+        fallback_old_file="${override_file}"
+    else
+        for candidate in "$@"; do
+            if [ -f "${candidate}" ]; then
+                fallback_old_file="${candidate}"
+                break
+            fi
+        done
+    fi
+
+    if [ -n "${fallback_old_file}" ]; then
+        log_info "Old overwrite file present (${fallback_old_file}), merging..."
+
+        mv -vf "${fallback_old_file}" "${override_file}.old"
+
+        jq -s '.[0] * .[1]' "${override_file}.old" \
+            "${install_file}" | tee "${override_file}"
+    else
+        mv -vf "${install_file}" "${override_file}"
+    fi
+}
